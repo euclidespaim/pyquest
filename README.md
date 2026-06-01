@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# 🐍 PyQuest 2.0 — Aprenda Python Jogando!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <img src="public/logo192.png" alt="PyQuest Logo" width="128" height="128" style="border-radius: 20%;" />
+  <p><em>Um jogo interativo e gamificado para aprender lógica de programação e Python!</em></p>
+</div>
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🌟 Sobre o Projeto
 
-### `npm start`
+O **PyQuest 2.0** é uma plataforma de aprendizado gamificada desenvolvida em **React** projetada especialmente para estudantes iniciantes (como alunos de Ensino Médio/Técnico) dominarem os fundamentos de Python de maneira leve, visual e altamente interativa.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Diferente de cursos tradicionais de leitura, o PyQuest coloca você no controle de um personagem que avança por **15 fases sequenciais** resolvendo desafios de completar lacunas, quizzes teóricos e desafios reais de codificação.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🚀 Principais Funcionalidades
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*   **🎮 Trilha Gamificada de 15 Níveis:** Do básico de variáveis e tipos (`int`, `float`, `str`, `bool`) até tomada de decisões complexas e operadores lógicos (`if`, `elif`, `else`, `and`, `or`).
+*   **💻 Simulador Python Offline Inteligente:** Um interpretador simulado em JavaScript que analisa e valida o código escrito na hora, detectando erros clássicos de sintaxe (como falta de dois-pontos `:` ou problemas de indentação) de forma didática.
+*   **🤖 Mentor Virtual "Professor Cobra":** Integração direta e opcional com a inteligência artificial da Anthropic (Claude) para fornecer dicas pedagógicas e personalizadas. O mentor nunca entrega a resposta pronta, forçando o estudante a pensar!
+*   **🔊 Efeitos Sonoros Retro:** Um sintetizador de áudio nativo utilizando a Web Audio API do navegador, proporcionando arpejos cativantes de conquista ao acertar e alertas de erro.
+*   **🏆 Conquistas & Ranks:** Ganho de XP, acompanhamento de sequência de acertos (*streaks*), liberação de medalhas exclusivas e evolução de patentes (de *Recruta Pythonista* até *Mestre das Condições*).
+*   **💾 Progresso Salvo Automaticamente:** Integração com o `localStorage` do navegador para manter o XP, fases concluídas e medalhas salvas, mesmo se recarregar a página.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛡️ Segurança e API Key
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Para garantir a total privacidade e segurança dos seus dados, a chave da API do Claude é inserida **diretamente pelo usuário** na interface do jogo.
+*   **Chave segura:** A chave fica salva localmente e de forma restrita apenas no seu navegador (`localStorage`).
+*   **Custo zero no servidor:** O aplicativo faz requisições diretas do cliente para a API, eliminando custos de infraestrutura de servidor.
+*   **Backup Offline:** Se você optar por não usar uma chave de API, o jogo continuará funcionando normalmente com as excelentes dicas pedagógicas estáticas (offline) do Professor Cobra.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🛠️ Como Executar Localmente
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Pré-requisitos
+Certifique-se de ter o [Node.js](https://nodejs.org/) instalado na sua máquina.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Passos
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/seu-usuario/pyquest.git
+    cd pyquest
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3.  **Inicie o servidor de desenvolvimento:**
+    ```bash
+    npm start
+    ```
+    *Acesse [http://localhost:3000](http://localhost:3000) no seu navegador para ver o PyQuest em ação!*
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🌐 Publicação e Deploy Rápido
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+O PyQuest é uma aplicação **Single Page Application (SPA)** estática, o que o torna ideal para hospedagem gratuita e de alta performance.
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### ⚡ Opção Recomendada: Vercel ou Netlify
+1.  Crie uma conta gratuita na [Vercel](https://vercel.com/) ou [Netlify](https://www.netlify.com/).
+2.  Conecte sua conta do GitHub/GitLab.
+3.  Selecione este repositório.
+4.  O sistema detectará automaticamente que é um projeto **Create React App** e configurará o build correto. Basta clicar em **Deploy**!
+5.  Em menos de 1 minuto, seu jogo estará no ar com link público e certificado SSL (HTTPS) gratuito.

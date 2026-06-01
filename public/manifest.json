@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "PyQuest",
+  "name": "PyQuest - Aprenda Python Jogando",
   "icons": [
     {
       "src": "favicon.ico",
