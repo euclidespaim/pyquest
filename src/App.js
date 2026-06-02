@@ -1,473 +1,28 @@
 import { useState, useEffect } from "react";
-
-// ─── AUDIO SYNTHESIZER FOR GAMIFICATION ──────────────────────────────────────
-function playSound(type) {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    const now = ctx.currentTime;
-
-    if (type === "success") {
-      // Elegant arpeggio: C5 -> E5 -> G5 -> C6
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(523.25, now); // C5
-      osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
-      osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
-      osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
-      osc.start(now);
-      osc.stop(now + 0.45);
-    } else if (type === "error") {
-      // Deep warning buzz
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(180, now);
-      osc.frequency.linearRampToValueAtTime(90, now + 0.25);
-      gain.gain.setValueAtTime(0.15, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-      osc.start(now);
-      osc.stop(now + 0.3);
-    } else if (type === "click") {
-      // Soft button click sound
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(400, now);
-      gain.gain.setValueAtTime(0.05, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-      osc.start(now);
-      osc.stop(now + 0.08);
-    }
-  } catch (e) {
-    console.log("Web Audio blocked or not supported yet: ", e);
-  }
-}
-
-// ─── CURRICULUM BANK: 15 SEQUENTIAL PATH LEVELS ──────────────────────────────
-const QUESTIONS = [
-  {
-    id: 1,
-    title: "1. Guardando Dados",
-    topic: "Variáveis & Tipos",
-    type: "fill",
-    xp: 15,
-    theory: "Variáveis são como **caixas organizadoras** na memória do computador. Cada caixa tem um **nome** (rótulo) e guarda um **valor** (conteúdo).\n\nPara guardar algo em uma variável, usamos o símbolo de igual `=` (chamado de operador de atribuição).\n\n**Exemplo:**\n```python\nidade = 15\n```\nNo exemplo acima, criamos uma caixa chamada `idade` e guardamos o número `15` dentro dela.",
-    code: "linguagem = ___",
-    answer: "Python",
-    placeholder: "Complete com \"Python\" (com aspas)",
-    hint: "Insira o nome da linguagem de programação que estamos estudando entre aspas duplas, por exemplo: \"Python\""
-  },
-  {
-    id: 2,
-    title: "2. Regras de Nomeação",
-    topic: "Variáveis & Tipos",
-    type: "quiz",
-    xp: 10,
-    theory: "No Python, existem algumas regras importantes para dar nome às variáveis:\n- Deve começar com uma **letra** ou underline `_`.\n- **Não** pode começar com números.\n- **Não** pode conter espaços (use `_` para separar palavras, estilo *snake_case*).\n- **Não** pode conter caracteres especiais como `$`, `%`, `@`.\n\n**Exemplo de nomes válidos:** `nome_aluno`, `x`, `nota2`.\n**Exemplo de nomes inválidos:** `1nota`, `nome aluno`, `preco$`",
-    question: "Qual dos seguintes nomes de variável é VÁLIDO no Python?",
-    options: ["1valor", "preco total", "nome_do_player", "moedas$"],
-    answer: 2,
-    explanation: "nome_do_player usa apenas letras e underlines, respeitando perfeitamente as regras de nomenclatura do Python!"
-  },
-  {
-    id: 3,
-    title: "3. Números Inteiros (int)",
-    topic: "Variáveis & Tipos",
-    type: "quiz",
-    xp: 10,
-    theory: "Em Python, os números sem casa decimal são do tipo **inteiro** (`int`).\n\nEles podem ser positivos, negativos ou zero.\n\n**Exemplo:**\n```python\nvidas = 3\npontos = 150\ntemperatura = -5\n```\nO Python descobre o tipo automaticamente! Se você digitar um número sem ponto, a variável será do tipo `int`.",
-    question: "Se declararmos a variável x = 2026, qual será o tipo de dado de x?",
-    options: ["float (decimal)", "str (texto)", "int (inteiro)", "bool (booleano)"],
-    answer: 2,
-    explanation: "Como 2026 é um número inteiro sem ponto decimal, seu tipo no Python é classificado como 'int'."
-  },
-  {
-    id: 4,
-    title: "4. Números Decimais (float)",
-    topic: "Variáveis & Tipos",
-    type: "fill",
-    xp: 15,
-    theory: "Números com casas decimais (números quebrados) são chamados de **float** (ponto flutuante).\n\n**Importante:** No Python e na programação, usamos **ponto `.`** e não vírgula `,` para separar a parte decimal!\n\n**Exemplo:**\n```python\npreco = 4.99   # Correto!\naltura = 1,75  # Erro de sintaxe!\n```\nSempre utilize o ponto para números quebrados.",
-    code: "nota = ___",
-    answer: "8.5",
-    placeholder: "Complete com o decimal 8.5",
-    hint: "Declare a variável nota com o valor decimal oito e meio usando o ponto decimal."
-  },
-  {
-    id: 5,
-    title: "5. Textos e Palavras (str)",
-    topic: "Variáveis & Tipos",
-    type: "quiz",
-    xp: 10,
-    theory: "Textos e palavras são chamados de **strings** (`str`) em Python.\n\nPara que o Python diferencie textos de comandos do programa, devemos colocá-los obrigatoriamente entre **aspas simples** (`'`) ou **aspas duplas** (`\"`).\n\n**Exemplo:**\n```python\nescola = \"Senai\"\ncidade = 'São Paulo'\n```\nSe você esquecer de colocar as aspas, o Python pensará que é uma variável ou comando inexistente e dará um erro!",
-    question: "Qual das opções abaixo é uma declaração de string válida no Python?",
-    options: ["escola = Etec", "escola = 'Etec'", "escola = [Etec]", "escola = (Etec)"],
-    answer: 1,
-    explanation: "'Etec' está corretamente envolvido em aspas simples, definindo uma string válida."
-  },
-  {
-    id: 6,
-    title: "6. Valores Lógicos (bool)",
-    topic: "Variáveis & Tipos",
-    type: "quiz",
-    xp: 10,
-    theory: "O tipo booleano (`bool`) guarda apenas duas respostas lógicas possíveis:\n- `True` (Verdadeiro)\n- `False` (Falso)\n\n**Atenção extrema:** No Python, a primeira letra **deve ser maiúscula**! `true` e `false` com letras minúsculas causarão erros.\n\n**Exemplo:**\n```python\njogo_ativo = True\ntem_energia = False\n```",
-    question: "Qual é a forma correta de declarar que uma variável chamada 'passou' é verdadeira em Python?",
-    options: ["passou = true", "passou = True", "passou = \"True\"", "passou = TRUE"],
-    answer: 1,
-    explanation: "True (com T maiúsculo e sem aspas) é a palavra-chave booleana verdadeira nativa do Python."
-  },
-  {
-    id: 7,
-    title: "7. Desafio: A Ficha do Herói",
-    topic: "Variáveis & Tipos",
-    type: "challenge",
-    xp: 30,
-    theory: "Chegou a hora do seu primeiro grande desafio prático! Vamos usar a função `print()` para exibir dados na tela (o nosso \"Terminal\").\n\n**Exemplo de saída:**\n```python\nprint(\"Olá mundo!\")\n```\nVocê também pode colocar o nome de uma variável dentro dos parênteses do `print()` para exibir seu valor!\n\n**Desafio:** Crie uma variável chamada `nome` e guarde o texto `\"Link\"` nela. Depois, crie uma variável `moedas` e guarde o número inteiro `50`. Por fim, exiba o nome e as moedas no terminal usando `print(nome)` e `print(moedas)` em linhas separadas.",
-    placeholder: "# 1. Crie a variável nome com o texto \"Link\"\nnome = \"Link\"\n\n# 2. Crie a variável moedas com o valor 50\nmoedas = 50\n\n# 3. Use a função print() para exibir as duas variáveis\n",
-    hint: "Escreva:\nprint(nome)\nprint(moedas)"
-  },
-  {
-    id: 8,
-    title: "8. Decisões com if",
-    topic: "Condicionais",
-    type: "fill",
-    xp: 15,
-    theory: "Na programação, tomamos decisões usando o comando **`if`** (que significa \"se\" em inglês).\n\nEle verifica uma condição. Se for verdadeira, executa o bloco de código logo abaixo.\n\n**Sintaxe importante:**\n1. Usamos dois pontos `:` no final da linha do `if`.\n2. O código de dentro do `if` deve ter um recuo de **4 espaços** (chamado de **indentação**). O Python usa esse espaço para saber o que está dentro do bloco.\n\n```python\nif idade >= 18:\n    print(\"Maior de idade\")\n```",
-    code: "___ idade >= 16:\n    print(\"Pode votar\")",
-    answer: "if",
-    placeholder: "Complete com a condicional se",
-    hint: "Palavra-chave que inicia a estrutura de decisão condicional (\"se\" em inglês)."
-  },
-  {
-    id: 9,
-    title: "9. Igualdade vs Atribuição",
-    topic: "Condicionais",
-    type: "quiz",
-    xp: 10,
-    theory: "Um erro muito comum de iniciantes é confundir `=` com `==`:\n- Um único igual `=` é usado para **guardar** (atribuir) um valor em uma variável. Ex: `pontos = 10`.\n- Dois iguais `==` são usados para **comparar** se dois valores são iguais. Ex: `if pontos == 10:`.\n\n**Exemplo:**\n```python\n# Guardando o valor\nsupremo = \"Python\"\n\n# Comparando o valor\nif supremo == \"Python\":\n    print(\"Sim!\")\n```",
-    question: "Qual dos seguintes códigos compara corretamente se a variável 'cor' é igual a 'verde'?",
-    options: ["if cor = 'verde':", "if cor == 'verde'", "if cor == 'verde':", "if cor === 'verde':"],
-    answer: 2,
-    explanation: "Usa == para comparação, fecha com : no final da linha, e usa aspas corretas para a string verde."
-  },
-  {
-    id: 10,
-    title: "10. O Caso Contrário (else)",
-    topic: "Condicionais",
-    type: "fill",
-    xp: 15,
-    theory: "O que fazemos quando a condição do `if` é falsa? Usamos o **`else`** (que significa \"caso contrário\").\n\nO bloco dentro do `else` roda **apenas** quando a condição do `if` falha (dá False).\n\n**Sintaxe:** O `else` **não** recebe uma condição de teste e termina com dois pontos `:`.\n\n```python\nif nota >= 6.0:\n    print(\"Aprovado\")\nelse:\n    print(\"Reprovado\")\n```",
-    code: "if nota >= 6:\n    print(\"Aprovado\")\n___:\n    print(\"Reprovado\")",
-    answer: "else",
-    placeholder: "Complete com o senão",
-    hint: "A palavra-chave para \"caso contrário\" em inglês."
-  },
-  {
-    id: 11,
-    title: "11. Mais Opções com elif",
-    topic: "Condicionais",
-    type: "quiz",
-    xp: 10,
-    theory: "E se tivermos mais do que apenas duas opções? E se quisermos testar várias condições em ordem?\n\nUsamos o **`elif`** (abreviação de *else if*, ou \"senão se\"). Ele testa uma nova condição caso a anterior seja falsa.\n\nVocê pode usar quantos `elif` quiser entre o `if` e o `else`!\n\n**Exemplo:**\n```python\nif sinal == \"verde\":\n    print(\"Siga\")\nelif sinal == \"amarelo\":\n    print(\"Atenção\")\nelse:\n    print(\"Pare\")\n```",
-    question: "Qual a palavra-chave correta no Python para testar uma condição alternativa caso o primeiro 'if' falhe?",
-    options: ["else if", "elseif", "elif", "otherwise"],
-    answer: 2,
-    explanation: "elif é a contração padrão do Python para 'else if'."
-  },
-  {
-    id: 12,
-    title: "12. Operadores de Comparação",
-    topic: "Condicionais",
-    type: "quiz",
-    xp: 10,
-    theory: "Podemos comparar números usando os seguintes operadores:\n- `>` (maior que)\n- `<` (menor que)\n- `>=` (maior ou igual a)\n- `<=` (menor ou igual a)\n- `!=` (diferente de)\n\n**Exemplo:**\n```python\nif saldo < 0:\n    print(\"Conta no vermelho!\")\n```",
-    question: "O que o seguinte programa exibirá no console?\n\nidade = 15\nif idade >= 18:\n    print(\"Adulto\")\nelse:\n    print(\"Jovem\")",
-    options: ["Adulto", "Jovem", "Erro de Sintaxe", "Nada"],
-    answer: 1,
-    explanation: "Como idade (15) não é maior ou igual a 18, a condição do if é falsa, rodando o bloco do else que imprime 'Jovem'."
-  },
-  {
-    id: 13,
-    title: "13. O Operador Lógico and",
-    topic: "Condicionais",
-    type: "quiz",
-    xp: 10,
-    theory: "Às vezes, precisamos testar **duas condições ao mesmo tempo**. O operador **`and`** (e) exige que **ambas** sejam verdadeiras.\n\nSe apenas uma for falsa, todo o teste falha!\n\n**Exemplo:**\n```python\nif tem_ingresso and tem_documento:\n    print(\"Pode entrar no show!\")\n```",
-    question: "Qual é o resultado lógico da seguinte linha de teste?\n\n10 > 5 and 3 > 8",
-    options: ["True", "False", "Error", "None"],
-    answer: 1,
-    explanation: "10 > 5 é True, mas 3 > 8 é False. Como o operador é 'and', ambos precisavam ser True. O resultado final é False."
-  },
-  {
-    id: 14,
-    title: "14. O Operador Lógico or",
-    topic: "Condicionais",
-    type: "quiz",
-    xp: 10,
-    theory: "O operador **`or`** (ou) exige que **apenas uma** das condições seja verdadeira para que todo o teste passe!\n\nEle só dará falso se **todas** as condições forem falsas.\n\n**Exemplo:**\n```python\nif sabado or domingo:\n    print(\"Dia de descansar!\")\n```",
-    question: "Qual é o resultado da expressão: 5 > 20 or 10 < 100 ?",
-    options: ["True", "False", "Error", "None"],
-    answer: 0,
-    explanation: "5 > 20 é False, mas 10 < 100 é True. Com o operador 'or', ter uma verdadeira é suficiente. Logo, o resultado é True."
-  },
-  {
-    id: 15,
-    title: "15. Desafio Final: A Balança da Febre",
-    topic: "Condicionais",
-    type: "challenge",
-    xp: 40,
-    theory: "Parabéns por chegar ao último nível da trilha! Vamos combinar tudo o que você aprendeu em um sistema real.\n\nImagine que estamos criando um termômetro inteligente.\n\n**Desafio:**\nCrie uma variável chamada `temperatura` e coloque nela o valor `38.2` (representando a febre do paciente).\n\nDepois, escreva uma estrutura condicional para avaliar a temperatura:\n- Se a temperatura for **maior ou igual a 37.8**, exiba `\"Febre\"` usando o `print`.\n- Se a temperatura estiver **entre 37.0 e 37.7** (inclusive), exiba `\"Subfebril\"`.\n- Caso contrário (menor que 37.0), exiba `\"Normal\"`.\n\n*Dica de Sintaxe:* No Python, você pode usar `elif temperatura >= 37.0 and temperatura <= 37.7:` ou simplesmente `elif temperatura >= 37.0:` (pois o `if` anterior já capturou temperaturas maiores ou iguais a 37.8). Não se esqueça dos dois pontos `:` e dos 4 espaços de indentação!",
-    placeholder: "# 1. Declare a variável temperatura com o valor 38.2\ntemperatura = 38.2\n\n# 2. Escreva as condicionais if, elif e else abaixo\n",
-    hint: "Escreva:\nif temperatura >= 37.8:\n    print(\"Febre\")\nelif temperatura >= 37.0:\n    print(\"Subfebril\")\nelse:\n    print(\"Normal\")"
-  }
-];
-
-const BADGES = [
-  { id: "primeiros_passos", name: "Primeiros Passos", icon: "🐣", desc: "Completou o nível 1 e deu partida na jornada!", criteria: (comp) => comp["1"] === "correct" },
-  { id: "var_expert", name: "Mestre das Caixas", icon: "📦", desc: "Completou todos os 7 primeiros níveis sobre Variáveis e Tipos.", criteria: (comp) => Array.from({ length: 7 }, (_, i) => i + 1).every(id => comp[id] === "correct") },
-  { id: "decision_maker", name: "Tomador de Decisão", icon: "⚖️", desc: "Completou os primeiros desafios de condicionais (Nível 8, 9 e 10).", criteria: (comp) => ["8", "9", "10"].every(id => comp[id] === "correct") },
-  { id: "streak_3", name: "Fogo no Cérebro", icon: "🔥", desc: "Acertou 3 ou mais questões seguidas!", criteria: (_, streak) => streak >= 3 },
-  { id: "pythonista_supremo", name: "Mestre da Febre", icon: "🐍", desc: "Venceu o desafio final da Balança da Febre (Nível 15).", criteria: (comp) => comp["15"] === "correct" }
-];
-
-const RANKS = [
-  { name: "Recruta Pythonista", min: 0, icon: "🐣" },
-  { name: "Aprendiz de Variáveis", min: 50, icon: "📗" },
-  { name: "Desenvolvedor Jr", min: 120, icon: "💻" },
-  { name: "Pythonista de Elite", min: 200, icon: "🐍" },
-  { name: "Mestre das Condições", min: 280, icon: "⚡" }
-];
-
-function getRank(xp) {
-  return [...RANKS].reverse().find(r => xp >= r.min) || RANKS[0];
-}
-
-// ─── SMART OFFLINE PYTHON SIMULATOR ──────────────────────────────────────────
-function runSimulatedPython(code) {
-  const lines = code.split("\n");
-  const variables = {};
-  const stdout = [];
-  const errors = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const rawLine = lines[i];
-    const line = rawLine.trim();
-    if (!line || line.startsWith("#")) continue;
-
-    // A. Check for classic syntax errors: missing colon in if/elif/else
-    if ((line.startsWith("if ") || line.startsWith("elif ")) && !line.endsWith(":")) {
-      errors.push(`Erro de Sintaxe (Linha ${i + 1}): Falta dois-pontos ':' no final da condicional.`);
-      continue;
-    }
-    if (line === "else" || (line.startsWith("else") && !line.endsWith(":"))) {
-      errors.push(`Erro de Sintaxe (Linha ${i + 1}): O 'else' deve ser escrito apenas como 'else:'.`);
-      continue;
-    }
-
-    // B. Check for print statement with missing parens (Python 2 vs 3 mistake)
-    if (line.startsWith("print ") && !line.includes("(")) {
-      errors.push(`Erro de Sintaxe (Linha ${i + 1}): No Python 3, a função print() exige parênteses. Ex: print("Olá")`);
-      continue;
-    }
-
-    // C. Check for simple variable assignment
-    const assignmentMatch = line.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.+)$/);
-    if (assignmentMatch) {
-      const varName = assignmentMatch[1];
-      const rawVal = assignmentMatch[2].trim();
-
-      try {
-        if ((rawVal.startsWith('"') && rawVal.endsWith('"')) || (rawVal.startsWith("'") && rawVal.endsWith("'"))) {
-          variables[varName] = rawVal.slice(1, -1);
-        } else if (rawVal === "True") {
-          variables[varName] = true;
-        } else if (rawVal === "False") {
-          variables[varName] = false;
-        } else if (!isNaN(rawVal)) {
-          variables[varName] = Number(rawVal);
-        } else {
-          // Check if assigning from another variable
-          if (variables[rawVal] !== undefined) {
-            variables[varName] = variables[rawVal];
-          } else {
-            variables[varName] = rawVal; // string fallback
-          }
-        }
-      } catch (e) {
-        errors.push(`Erro (Linha ${i + 1}): Falha ao ler atribuição.`);
-      }
-      continue;
-    }
-
-    // D. Check for print call
-    const printMatch = line.match(/^print\((.*)\)$/);
-    if (printMatch) {
-      const arg = printMatch[1].trim();
-      if ((arg.startsWith('"') && arg.endsWith('"')) || (arg.startsWith("'") && arg.endsWith("'"))) {
-        stdout.push(arg.slice(1, -1));
-      } else if (variables[arg] !== undefined) {
-        stdout.push(String(variables[arg]));
-      } else {
-        // String formatting or expressions
-        stdout.push(arg.replace(/'|"/g, ""));
-      }
-      continue;
-    }
-  }
-
-  return { variables, stdout, errors };
-}
-
-// ─── OFFLINE PEDAGOGICAL TEST RUNNER ─────────────────────────────────────────
-function evaluatePythonLocally(levelId, code) {
-  const clean = code.replace(/#.*$/gm, "").trim();
-  const run = runSimulatedPython(code);
-
-  if (run.errors.length > 0) {
-    return {
-      aprovado: false,
-      nota: 0,
-      feedback: run.errors[0],
-      dica: "Ajuste os dois-pontos ':' ou a grafia antes de enviar!"
-    };
-  }
-
-  if (levelId === 7) {
-    // Requirements: nome="Link", moedas=50, printed both
-    const hasNome = run.variables.nome === "Link";
-    const hasMoedas = Number(run.variables.moedas) === 50;
-    const printedNome = run.stdout.includes("Link");
-    const printedMoedas = run.stdout.some(s => s === "50" || s === "50.0");
-
-    if (!hasNome) {
-      return {
-        aprovado: false,
-        nota: 30,
-        feedback: "Ops! Não encontrei a variável 'nome' guardando o valor 'Link'.",
-        dica: "Verifique se escreveu: nome = \"Link\" (com L maiúsculo)."
-      };
-    }
-    if (!hasMoedas) {
-      return {
-        aprovado: false,
-        nota: 50,
-        feedback: "Muito bem com o nome, mas a variável 'moedas' precisa guardar o número inteiro 50.",
-        dica: "Escreva: moedas = 50 (números inteiros não usam aspas!)."
-      };
-    }
-    if (!printedNome || !printedMoedas) {
-      return {
-        aprovado: false,
-        nota: 70,
-        feedback: "As variáveis foram criadas corretamente! Mas você esqueceu de exibi-las.",
-        dica: "Use print(nome) e print(moedas) nas últimas linhas para que apareçam na tela."
-      };
-    }
-
-    return {
-      aprovado: true,
-      nota: 100,
-      feedback: "Excelente! Você declarou a string 'nome', o inteiro 'moedas' e imprimiu ambos com perfeição! O herói Link está pronto! 🏆",
-      dica: "Continue assim! O próximo nível aborda tomada de decisões com o comando 'if'."
-    };
-  }
-
-  if (levelId === 15) {
-    // Requirements: temperatura=38.2, if/elif/else, print Febre, Subfebril, Normal
-    const hasTempVar = run.variables.temperatura !== undefined;
-    const hasIf = /\bif\b/.test(clean);
-    const hasElif = /\belif\b/.test(clean);
-    const hasElse = /\belse\b/.test(clean);
-
-    const hasFebre = /print\(\s*(["'])Febre\1\s*\)/i.test(clean);
-    const hasSubfebril = /print\(\s*(["'])Subfebril\1\s*\)/i.test(clean);
-    const hasNormal = /print\(\s*(["'])Normal\1\s*\)/i.test(clean);
-
-    if (!hasTempVar) {
-      return {
-        aprovado: false,
-        nota: 20,
-        feedback: "Você declarou a variável 'temperatura'? Ela é necessária para testar o sistema.",
-        dica: "Adicione na primeira linha: temperatura = 38.2"
-      };
-    }
-
-    if (!hasIf) {
-      return {
-        aprovado: false,
-        nota: 40,
-        feedback: "Para testar as condições, precisamos começar a estrutura com 'if'.",
-        dica: "Use: if temperatura >= 37.8: e indente o print correspondente."
-      };
-    }
-
-    if (!hasElif) {
-      return {
-        aprovado: false,
-        nota: 60,
-        feedback: "Lembre-se de utilizar a palavra-chave 'elif' para verificar o estado 'Subfebril'.",
-        dica: "Use: elif temperatura >= 37.0: (como o if anterior já pegou acima de 37.8, o elif testará a faixa do meio!)."
-      };
-    }
-
-    if (!hasElse) {
-      return {
-        aprovado: false,
-        nota: 70,
-        feedback: "Você esqueceu de tratar a temperatura saudável. Precisamos de uma cláusula 'else:' no final.",
-        dica: "Use: else: (na linha de baixo, com recuo, coloque print(\"Normal\"))."
-      };
-    }
-
-    if (!hasFebre || !hasSubfebril || !hasNormal) {
-      return {
-        aprovado: false,
-        nota: 80,
-        feedback: "Suas condições estão estruturadas, mas certifique-se de usar print() para exibir exatamente 'Febre', 'Subfebril' e 'Normal'.",
-        dica: "Escreva as palavras exatamente como solicitadas, incluindo maiúsculas."
-      };
-    }
-
-    // Double check indentation logic in lines (all lines after if/elif/else should have indentation)
-    const linesOfCode = clean.split("\n");
-    let indentationError = false;
-    for (let i = 0; i < linesOfCode.length; i++) {
-      const l = linesOfCode[i];
-      if (l.startsWith("if") || l.startsWith("elif") || l.startsWith("else")) {
-        const nextLine = linesOfCode[i + 1];
-        if (nextLine && !nextLine.startsWith(" ") && !nextLine.startsWith("\t")) {
-          indentationError = true;
-          break;
-        }
-      }
-    }
-
-    if (indentationError) {
-      return {
-        aprovado: false,
-        nota: 85,
-        feedback: "Cuidado com o espaçamento! Em Python, as linhas dentro de condicionais PRECISAM de 4 espaços à esquerda.",
-        dica: "Adicione espaços na frente das linhas do print(). Ex:\nif condicao:\n    print(...)"
-      };
-    }
-
-    return {
-      aprovado: true,
-      nota: 100,
-      feedback: "Brilhante! Você construiu uma balança de febre médica completa usando if, elif e else, respeitando todas as indentações! 🎓🏥",
-      dica: "Você completou a jornada de introdução! Agora você é oficialmente um mestre das condicionais no Python!"
-    };
-  }
-
-  return { aprovado: false, nota: 0, feedback: "Exercício não mapeado", dica: null };
-}
+import { QUESTIONS, BADGES, getRank, getSubQuestion } from "./data/questions";
+import { runSimulatedPython, evaluatePythonLocally } from "./utils/interpreter";
 
 // ─── MAIN PYQUEST REACT APPLICATION ──────────────────────────────────────────
 export default function App() {
+  // Screen resize hook for responsive roadmap path
+  const [windowWidth, setWindowWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 800);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Compute dynamic width and positioning for the path nodes
+  const containerWidth = Math.min(600, windowWidth - 32);
+  const centerX = containerWidth / 2;
+  const horizontalDeviation = Math.min(120, containerWidth * 0.22);
+
   // Persistence states
   const [theme, setTheme] = useState(() => localStorage.getItem("pyquest_theme") || "dark");
+  const [hoveredNode, setHoveredNode] = useState(null);
   const [playerName, setPlayerName] = useState(() => localStorage.getItem("pyquest_player_name") || "");
   const [nameInput, setNameInput] = useState("");
   const [xp, setXp] = useState(() => Number(localStorage.getItem("pyquest_xp")) || 0);
@@ -560,6 +115,49 @@ export default function App() {
   const activeTheme = THEMES[theme];
 
   // Actions
+  function playSound(type) {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+
+      if (type === "success") {
+        // Elegant arpeggio: C5 -> E5 -> G5 -> C6
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+        osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+        osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } else if (type === "error") {
+        // Deep warning buzz
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(90, now + 0.25);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === "click") {
+        // Soft button click sound
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(400, now);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+    } catch (e) {
+      console.log("Web Audio blocked or not supported yet: ", e);
+    }
+  }
+
   function handleStart(name) {
     if (!name.trim()) return;
     playSound("click");
@@ -568,11 +166,35 @@ export default function App() {
   }
 
   function handleSelectLevel(level) {
-    // Check if level is locked
-    const isUnlocked = level.id === 1 || completed[level.id - 1] === "correct";
+    // Determine if the selected level/sub-level is unlocked
+    let isUnlocked = false;
+    if (typeof level.id === "number") {
+      if (level.id === 1) {
+        isUnlocked = true;
+      } else {
+        const prevId = level.id - 1;
+        isUnlocked =
+          completed[prevId] === "correct" &&
+          completed[prevId + "-A"] === "correct" &&
+          completed[prevId + "-B"] === "correct";
+      }
+    } else if (typeof level.id === "string" && level.id.includes("-")) {
+      // Subpath: unlocked if the main level is unlocked!
+      const parentId = Number(level.id.split("-")[0]);
+      if (parentId === 1) {
+        isUnlocked = true;
+      } else {
+        const prevId = parentId - 1;
+        isUnlocked =
+          completed[prevId] === "correct" &&
+          completed[prevId + "-A"] === "correct" &&
+          completed[prevId + "-B"] === "correct";
+      }
+    }
+
     if (!isUnlocked) {
       playSound("error");
-      window.alert("Nível bloqueado! Conclua o desafio anterior para poder avançar nesta missão. 🔐");
+      window.alert("Nível ou sub-desafio bloqueado! Conclua o nó principal anterior e ambas as suas sub-fases secundárias para avançar nesta missão. 🔐");
       return;
     }
 
@@ -603,7 +225,8 @@ export default function App() {
 
   function handleConfirmAnswer() {
     let isCorrect = false;
-    let gainedXp = activeLevel.xp;
+    const isAlreadyCompleted = completed[activeLevel.id] === "correct";
+    let gainedXp = isAlreadyCompleted ? 0 : activeLevel.xp;
     let exp = "";
 
     if (activeLevel.type === "quiz") {
@@ -622,11 +245,18 @@ export default function App() {
     if (isCorrect) {
       playSound("success");
       setXp(x => x + gainedXp);
-      setStreak(s => s + 1);
+      if (!isAlreadyCompleted) {
+        setStreak(s => s + 1);
+      }
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2000);
       setCompleted(prev => ({ ...prev, [activeLevel.id]: "correct" }));
-      setFeedback({ correct: true, gained: gainedXp, explanation: exp });
+      setFeedback({ 
+        correct: true, 
+        gained: gainedXp, 
+        explanation: exp,
+        alreadyCompleted: isAlreadyCompleted
+      });
     } else {
       playSound("error");
       setStreak(0);
@@ -642,18 +272,28 @@ export default function App() {
   }
 
   function handleConfirmChallenge() {
+    const isAlreadyCompleted = completed[activeLevel.id] === "correct";
+    const gained = isAlreadyCompleted ? 0 : activeLevel.xp;
+
     // Call offline evaluator
     const res = evaluatePythonLocally(activeLevel.id, challengeCode);
     
     if (res.aprovado) {
       playSound("success");
-      const gained = activeLevel.xp;
       setXp(x => x + gained);
-      setStreak(s => s + 1);
+      if (!isAlreadyCompleted) {
+        setStreak(s => s + 1);
+      }
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2000);
       setCompleted(prev => ({ ...prev, [activeLevel.id]: "correct" }));
-      setFeedback({ correct: true, gained: gained, explanation: res.feedback, note: res.nota });
+      setFeedback({ 
+        correct: true, 
+        gained: gained, 
+        explanation: res.feedback, 
+        note: res.nota,
+        alreadyCompleted: isAlreadyCompleted
+      });
     } else {
       playSound("error");
       setStreak(0);
@@ -676,13 +316,15 @@ export default function App() {
       setTimeout(() => {
         let text = "";
         if (activeLevel.type === "quiz") {
-          text = `Professor Cobra diz: 🐍\n\nNesta questão de escolha múltipla, analise com calma a teoria ao lado. A resposta está diretamente ligada ao conceito de que "${activeLevel.explanation.split(" ").slice(0, 8).join(" ")}...". Tente ler o exemplo e eliminar as que violam as regras básicas!`;
+          text = `Professor Cobra diz: 🐍\n\nNesta questão de escolha múltipla, analise com calma a teoria ao lado. A resposta está diretamente ligada ao conceito de que "${activeLevel.explanation ? activeLevel.explanation.split(" ").slice(0, 8).join(" ") : "os fundamentos do Python..."}...". Tente ler o exemplo e eliminar as que violam as regras básicas!`;
         } else if (activeLevel.type === "fill") {
           text = `Professor Cobra diz: 🐍\n\nNo preenchimento de código, preste atenção aos detalhes de sintaxe. A palavra procurada serve para: "${activeLevel.hint}". Lembre-se de escrever exatamente igual ao Python, em letras minúsculas!`;
         } else if (activeLevel.id === 7) {
           text = `Professor Cobra diz: 🐍\n\nNo desafio 'Ficha do Herói', você precisa ter exatamente estas 4 linhas de código:\n1. Criar a variável: nome = "Link"\n2. Criar a variável: moedas = 50\n3. Imprimir o nome: print(nome)\n4. Imprimir as moedas: print(moedas)\n\nLembre-se de não usar aspas no número 50 e usar aspas na palavra "Link"!`;
         } else if (activeLevel.id === 15) {
           text = `Professor Cobra diz: 🐍\n\nNo desafio final, lembre-se da indentação! A estrutura deve ser exatamente assim:\n\ntemperatura = 38.2\nif temperatura >= 37.8:\n    print("Febre")\nelif temperatura >= 37.0:\n    print("Subfebril")\nelse:\n    print("Normal")\n\nPreste muita atenção nos dois pontos ':' no final das linhas de condição e nos 4 espaços à esquerda dentro do print.`;
+        } else if (activeLevel.id === 18) {
+          text = `Professor Cobra diz: 🐍\n\nNo desafio da Calculadora, você deve definir a função somar(a, b) com recuo e no final chamá-la:\n\ndef somar(a, b):\n    print(a + b)\n\nsomar(10, 20)`;
         }
         setMentorMessage(text);
         setMentorLoading(false);
@@ -741,6 +383,22 @@ export default function App() {
       setScreen("home");
       setShowSettings(false);
     }
+  }
+
+  function getNextLevel(currentLevelId) {
+    if (typeof currentLevelId === "number") {
+      return getSubQuestion(currentLevelId, "A");
+    } else if (typeof currentLevelId === "string" && currentLevelId.includes("-")) {
+      const [parentStr, sub] = currentLevelId.split("-");
+      const parentId = Number(parentStr);
+      if (sub === "A") {
+        return getSubQuestion(parentId, "B");
+      } else if (sub === "B") {
+        const nextMain = QUESTIONS.find(q => q.id === parentId + 1);
+        return nextMain || null;
+      }
+    }
+    return null;
   }
 
   const rank = getRank(xp);
@@ -891,82 +549,363 @@ export default function App() {
         </main>
       )}
 
-      {/* TELA B: ROADMAP DE APRENDIZADO (Duolingo Style) */}
+      {/* TELA B: TRILHA DE APRENDIZADO SINUOSA (Spring Garden Winding Path) */}
       {screen === "roadmap" && (
-        <main style={styles.roadmapScreen}>
-          <div style={styles.roadmapContainer}>
-            <div style={styles.roadmapWelcome}>
-              <h2 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>Sua Jornada Python 🗺️</h2>
-              <p style={{ color: activeTheme.textMuted, fontSize: 14, marginTop: 4 }}>Complete as missões para desbloquear novas habilidades</p>
+        <main style={{ ...styles.roadmapScreen, background: activeTheme.bg, padding: "24px 12px 100px" }}>
+          {/* Inject dynamic styles */}
+          <style>{`
+            .pulse-node {
+              box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+              animation: springPulse 2s infinite ease-in-out;
+            }
+            @keyframes springPulse {
+              0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); transform: scale(1); }
+              70% { box-shadow: 0 0 20px 8px rgba(16, 185, 129, 0.1); transform: scale(1.08); }
+              100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); transform: scale(1); }
+            }
+            .spring-card {
+              border-radius: 20px;
+              border: 1px solid rgba(255, 255, 255, 0.6);
+              box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+              backdrop-filter: blur(10px);
+              transition: all 0.3s ease;
+            }
+            .spring-node-btn {
+              width: 76px;
+              height: 76px;
+              border-radius: 50%;
+              border: 4px solid #ffffff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 24px;
+              font-weight: 800;
+              color: #ffffff;
+              cursor: pointer;
+              transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+              box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+              position: relative;
+              z-index: 5;
+            }
+            .spring-node-btn:hover:not(:disabled) {
+              transform: scale(1.12);
+              box-shadow: 0 12px 24px rgba(16, 185, 129, 0.25);
+            }
+            .sub-node-btn {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              border: 2px solid #ffffff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 14px;
+              font-weight: 800;
+              color: #ffffff;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              box-shadow: 0 4px 10px rgba(59, 130, 246, 0.12);
+              position: relative;
+              z-index: 5;
+            }
+            .sub-node-btn:hover:not(:disabled) {
+              transform: scale(1.15);
+              box-shadow: 0 6px 14px rgba(59, 130, 246, 0.22);
+            }
+            .tooltip-bubble {
+              position: absolute;
+              width: 200px;
+              padding: 8px 12px;
+              background: rgba(255, 255, 255, 0.98);
+              border: 2px solid #34d399;
+              border-radius: 14px;
+              box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+              z-index: 20;
+              pointer-events: none;
+              text-align: center;
+              transform: translateY(-10px);
+              animation: tooltipAppear 0.2s forwards ease-out;
+            }
+            .sub-tooltip-bubble {
+              position: absolute;
+              width: 170px;
+              padding: 6px 10px;
+              background: rgba(255, 255, 255, 0.98);
+              border: 2px solid #60a5fa;
+              border-radius: 12px;
+              box-shadow: 0 6px 15px rgba(59, 130, 246, 0.12);
+              z-index: 20;
+              pointer-events: none;
+              text-align: center;
+              transform: translateY(-8px);
+              animation: tooltipAppear 0.2s forwards ease-out;
+            }
+            @keyframes tooltipAppear {
+              to { transform: translateY(0); opacity: 1; }
+            }
+          `}</style>
+
+          <div style={{ ...styles.roadmapContainer, maxWidth: containerWidth }}>
+            {/* Header com estilo Primavera Suave */}
+            <div className="spring-card" style={{ padding: "24px 20px", marginBottom: 40, textAlign: "center", background: "rgba(255, 255, 255, 0.8)", border: "2px solid #bbf7d0" }}>
+              <h2 style={{ fontSize: 28, fontWeight: 900, color: "#065f46", margin: 0, letterSpacing: "-0.5px" }}>
+                Jornada de Aprendizado 🌸
+              </h2>
+              <p style={{ color: "#047857", fontSize: 14, margin: "6px 0 0", fontWeight: 500 }}>
+                Conclua os nós principais e seus subpaths laterais para liberar novas missões!
+              </p>
             </div>
 
-            {/* ROADMAP NODES CONTAINER */}
-            <div style={{ ...styles.nodesContainer, position: "relative" }}>
-              {/* Central connecting dashed line */}
-              <div style={{ ...styles.roadmapLine, background: activeTheme.roadmapLine }} />
+            {/* TRILHA SINUOSA (ZIG-ZAG RESPONSIVO) */}
+            <div style={{ position: "relative", width: "100%", height: QUESTIONS.length * 140 + 80, margin: "0 auto" }}>
+              
+              {/* SVG Connecting Vine Line (zIndex: 1, runs UNDER the circles) */}
+              <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 1, pointerEvents: "none" }}>
+                <path
+                  d={(() => {
+                    let pathD = "";
+                    QUESTIONS.forEach((level, idx) => {
+                      const x = centerX + Math.sin(idx * 0.8) * horizontalDeviation;
+                      const y = idx * 140 + 60;
+                      if (idx === 0) {
+                        pathD += `M ${x} ${y}`;
+                      } else {
+                        const prevX = centerX + Math.sin((idx - 1) * 0.8) * horizontalDeviation;
+                        const prevY = (idx - 1) * 140 + 60;
+                        const cpY1 = prevY + 70;
+                        const cpY2 = y - 70;
+                        pathD += ` C ${prevX} ${cpY1}, ${x} ${cpY2}, ${x} ${y}`;
+                      }
+                    });
+                    return pathD;
+                  })()}
+                  fill="none"
+                  stroke="#a7f3d0"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray="14 10"
+                />
+              </svg>
 
+              {/* RENDERIZAR OS NÓS E SUB-DESAFIOS */}
               {QUESTIONS.map((level, idx) => {
                 const isCompleted = completed[level.id] === "correct";
-                const isUnlocked = level.id === 1 || completed[level.id - 1] === "correct";
+                
+                // Determine lock status: unlocked if N-1 level AND BOTH N-1 sub-levels are completed
+                const isUnlocked = level.id === 1 || (
+                  completed[level.id - 1] === "correct" &&
+                  completed[(level.id - 1) + "-A"] === "correct" &&
+                  completed[(level.id - 1) + "-B"] === "correct"
+                );
                 const isCurrent = isUnlocked && !isCompleted;
 
-                // Alternate nodes left / center / right for a zig-zag path
-                const offsetPattern = [0, 50, 0, -50];
-                const horizontalOffset = offsetPattern[idx % 4];
+                // Sub-fase A & B completions
+                const isSubACompleted = completed[level.id + "-A"] === "correct";
+                const isSubBCompleted = completed[level.id + "-B"] === "correct";
+
+                const x = centerX + Math.sin(idx * 0.8) * horizontalDeviation;
+                const isNodeOnLeft = Math.sin(idx * 0.8) < 0;
 
                 return (
-                  <div 
+                  <div
                     key={level.id}
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      margin: "24px 0",
-                      transform: `translateX(${horizontalOffset}px)`,
-                      position: "relative",
+                      position: "absolute",
+                      left: 0,
+                      top: idx * 140,
+                      width: "100%",
+                      height: 140,
                       zIndex: 2,
                     }}
                   >
+                    
+                    {/* SVG Branch Lines for Subpaths (zIndex: 1, drawn UNDER buttons) */}
+                    <svg style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 1, pointerEvents: "none" }}>
+                      <line x1={x} y1={60} x2={isNodeOnLeft ? x + 65 : x - 65} y2={60 - 40} stroke="#a7f3d0" strokeWidth="4" />
+                      <line x1={x} y1={60} x2={isNodeOnLeft ? x + 65 : x - 65} y2={60 + 40} stroke="#a7f3d0" strokeWidth="4" />
+                    </svg>
+
+                    {/* A. BOTÃO DO NÍVEL PRINCIPAL */}
                     <button
-                      className={isCurrent ? "pulse-node" : ""}
+                      className={`spring-node-btn ${isCurrent ? "pulse-node" : ""}`}
                       onClick={() => handleSelectLevel(level)}
+                      disabled={!isUnlocked}
+                      onMouseEnter={() => setHoveredNode(String(level.id))}
+                      onMouseLeave={() => setHoveredNode(null)}
                       style={{
-                        ...styles.roadmapNode,
-                        background: isCompleted 
-                          ? activeTheme.pythonGreen 
-                          : isCurrent 
-                            ? activeTheme.pythonBlue 
-                            : activeTheme.cardBg,
-                        borderColor: isCompleted 
-                          ? activeTheme.pythonGreen 
-                          : isCurrent 
-                            ? activeTheme.pythonBlue 
-                            : activeTheme.cardBorder,
-                        opacity: isUnlocked ? 1 : 0.6,
+                        position: "absolute",
+                        left: x - 38,
+                        top: 60 - 38,
+                        background: isCompleted
+                          ? "linear-gradient(135deg, #a7f3d0, #34d399)" // Completed Green
+                          : isCurrent
+                            ? "linear-gradient(135deg, #fef08a, #facc15)" // Active pulsing yellow
+                            : "#cbd5e1", // Locked gray
+                        color: isCompleted
+                          ? "#065f46"
+                          : isCurrent
+                            ? "#854d0e"
+                            : "#475569", // High contrast locked
+                        borderColor: isCurrent ? "#facc15" : "#ffffff",
+                        opacity: isUnlocked ? 1 : 0.75,
                         cursor: isUnlocked ? "pointer" : "not-allowed",
-                        transform: isCurrent ? "scale(1.1)" : "scale(1)"
+                        zIndex: 5,
                       }}
                     >
-                      {isCompleted ? "👑" : level.id}
+                      {level.id}
+                      
+                      {/* Completion check badge */}
+                      {isCompleted && (
+                        <span style={{ position: "absolute", top: -8, right: -8, background: "#10b981", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, border: "2px solid #fff", zIndex: 6 }}>
+                          🌸
+                        </span>
+                      )}
+
+                      {/* Locked badge indicator */}
+                      {!isUnlocked && (
+                        <span style={{ position: "absolute", bottom: -6, right: -6, background: "#6b7280", borderRadius: "50%", width: 18, height: 18, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, border: "2px solid #fff", zIndex: 6 }}>
+                          🔒
+                        </span>
+                      )}
                     </button>
 
-                    <div style={{ ...styles.nodeTextBubble, background: activeTheme.cardBg, borderColor: activeTheme.cardBorder }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: activeTheme.pythonBlue, textTransform: "uppercase" }}>
-                        {level.topic}
-                      </div>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: activeTheme.text, marginTop: 2 }}>
-                        {level.title.split(". ")[1]}
-                      </div>
-                      <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 4 }}>
-                        <span style={{ fontSize: 11, color: activeTheme.textMuted }}>
-                          {level.type === "quiz" ? "🎯 Quiz" : level.type === "fill" ? "✏️ Completar" : "🏆 Desafio"}
+                    {/* B. SUB-BOTÃO A (Subpath superior) */}
+                    <button
+                      className="sub-node-btn"
+                      onClick={() => handleSelectLevel(getSubQuestion(level.id, "A"))}
+                      disabled={!isUnlocked}
+                      onMouseEnter={() => setHoveredNode(level.id + "-A")}
+                      onMouseLeave={() => setHoveredNode(null)}
+                      style={{
+                        position: "absolute",
+                        left: (isNodeOnLeft ? x + 65 : x - 65) - 20,
+                        top: (60 - 40) - 20,
+                        background: isSubACompleted
+                          ? "linear-gradient(135deg, #bbf7d0, #10b981)" // completed
+                          : isUnlocked
+                            ? "linear-gradient(135deg, #93c5fd, #3b82f6)" // unlocked blue
+                            : "#cbd5e1", // locked
+                        color: isSubACompleted
+                          ? "#065f46"
+                          : isUnlocked
+                            ? "#1e3a8a"
+                            : "#475569",
+                        opacity: isUnlocked ? 1 : 0.75,
+                        cursor: isUnlocked ? "pointer" : "not-allowed",
+                        zIndex: 5,
+                      }}
+                    >
+                      A
+                      {isSubACompleted && (
+                        <span style={{ position: "absolute", top: -6, right: -6, background: "#10b981", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, border: "1px solid #fff", zIndex: 6 }}>
+                          🌸
                         </span>
-                        <span style={{ fontSize: 10, fontWeight: 800, color: activeTheme.primary }}>+{level.xp} XP</span>
+                      )}
+                    </button>
+
+                    {/* C. SUB-BOTÃO B (Subpath inferior) */}
+                    <button
+                      className="sub-node-btn"
+                      onClick={() => handleSelectLevel(getSubQuestion(level.id, "B"))}
+                      disabled={!isUnlocked}
+                      onMouseEnter={() => setHoveredNode(level.id + "-B")}
+                      onMouseLeave={() => setHoveredNode(null)}
+                      style={{
+                        position: "absolute",
+                        left: (isNodeOnLeft ? x + 65 : x - 65) - 20,
+                        top: (60 + 40) - 20,
+                        background: isSubBCompleted
+                          ? "linear-gradient(135deg, #bbf7d0, #10b981)" // completed
+                          : isUnlocked
+                            ? "linear-gradient(135deg, #93c5fd, #3b82f6)" // unlocked blue
+                            : "#cbd5e1", // locked
+                        color: isSubBCompleted
+                          ? "#065f46"
+                          : isUnlocked
+                            ? "#1e3a8a"
+                            : "#475569",
+                        opacity: isUnlocked ? 1 : 0.75,
+                        cursor: isUnlocked ? "pointer" : "not-allowed",
+                        zIndex: 5,
+                      }}
+                    >
+                      B
+                      {isSubBCompleted && (
+                        <span style={{ position: "absolute", top: -6, right: -6, background: "#10b981", borderRadius: "50%", width: 14, height: 14, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, border: "1px solid #fff", zIndex: 6 }}>
+                          🌸
+                        </span>
+                      )}
+                    </button>
+
+                    {/* D. FLOATING HOVER TOOLTIPS */}
+                    
+                    {/* Tooltip para Nó Principal */}
+                    {hoveredNode === String(level.id) && (
+                      <div
+                        className="tooltip-bubble"
+                        style={{
+                          left: x - 100,
+                          top: 60 - 95,
+                        }}
+                      >
+                        <div style={{ fontSize: 9, fontWeight: 700, color: "#10b981", textTransform: "uppercase" }}>
+                          {level.topic}
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: "#1f2937", marginTop: 2 }}>
+                          Fase {level.id}: {level.title.split(". ")[1] || level.title}
+                        </div>
+                        <div style={{ fontSize: 10, color: "#6b7280", marginTop: 4 }}>
+                          {isCompleted ? "🌸 Concluído!" : !isUnlocked ? "🔒 Requer fase anterior" : "⚡ Clique para Jogar!"} (+{level.xp} XP)
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Tooltip para Sub-fase A */}
+                    {hoveredNode === level.id + "-A" && (
+                      <div
+                        className="sub-tooltip-bubble"
+                        style={{
+                          left: (isNodeOnLeft ? x + 65 : x - 65) - 85,
+                          top: (60 - 40) - 70,
+                        }}
+                      >
+                        <div style={{ fontSize: 8, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase" }}>
+                          Fase {level.id} — Subpath A
+                        </div>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: "#1f2937", marginTop: 1 }}>
+                          Desafio Rápido A
+                        </div>
+                        <div style={{ fontSize: 9, color: "#6b7280", marginTop: 2 }}>
+                          {isSubACompleted ? "🌸 Prática Concluída!" : !isUnlocked ? "🔒 Bloqueado" : "⚡ Clique para Praticar!"} (+5 XP)
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Tooltip para Sub-fase B */}
+                    {hoveredNode === level.id + "-B" && (
+                      <div
+                        className="sub-tooltip-bubble"
+                        style={{
+                          left: (isNodeOnLeft ? x + 65 : x - 65) - 85,
+                          top: (60 + 40) - 70,
+                        }}
+                      >
+                        <div style={{ fontSize: 8, fontWeight: 700, color: "#3b82f6", textTransform: "uppercase" }}>
+                          Fase {level.id} — Subpath B
+                        </div>
+                        <div style={{ fontSize: 11, fontWeight: 800, color: "#1f2937", marginTop: 1 }}>
+                          Revisão Relâmpago B
+                        </div>
+                        <div style={{ fontSize: 9, color: "#6b7280", marginTop: 2 }}>
+                          {isSubBCompleted ? "🌸 Revisão Concluída!" : !isUnlocked ? "🔒 Bloqueado" : "⚡ Clique para Revisar!"} (+5 XP)
+                        </div>
+                      </div>
+                    )}
+
                   </div>
                 );
               })}
+
             </div>
           </div>
         </main>
@@ -991,7 +930,7 @@ export default function App() {
 
             {/* RENDER TEORIA FORMATADA */}
             <div style={{ ...styles.theoryContent, color: activeTheme.text }}>
-              {activeLevel.theory.split("\n\n").map((paragraph, pIdx) => {
+              {(activeLevel.theory || "Revisão prática rápida baseada nos conceitos fundamentais desta fase.").split("\n\n").map((paragraph, pIdx) => {
                 // If paragraph is a code block
                 if (paragraph.startsWith("```python")) {
                   const rawCode = paragraph.replace(/```python|```/g, "").trim();
@@ -1256,7 +1195,11 @@ export default function App() {
                   </h3>
                   
                   <div style={{ fontSize: 14, fontWeight: 700, margin: "8px 0", color: activeTheme.text }}>
-                    {feedback.correct ? `+${feedback.gained} XP conquistados!` : "Não desanime!"}
+                    {feedback.correct 
+                      ? (feedback.alreadyCompleted 
+                          ? "Fase concluída anteriormente (+0 XP)" 
+                          : `+${feedback.gained} XP conquistados!`)
+                      : "Não desanime!"}
                   </div>
 
                   {feedback.note !== undefined && (
@@ -1280,21 +1223,49 @@ export default function App() {
                     </div>
                   )}
 
-                  <div style={{ display: "flex", gap: 10, justifyContent: "center", width: "100%" }}>
-                    {!feedback.correct && (
-                      <button 
-                        style={{ ...styles.secondaryBtn, flex: 1, borderColor: activeTheme.textMuted, color: activeTheme.text }} 
-                        onClick={() => { playSound("click"); setPhase("question"); }}
+                  {/* NAVIGATION CONTROLS */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", marginTop: 12 }}>
+                    {feedback.correct && getNextLevel(activeLevel.id) && (
+                      <button
+                        style={{ 
+                          ...styles.primaryBtn, 
+                          background: activeTheme.pythonGreen, 
+                          boxShadow: `0 4px 14px ${activeTheme.pythonGreen}44`,
+                          fontWeight: 800,
+                          fontSize: 16
+                        }}
+                        onClick={() => {
+                          const next = getNextLevel(activeLevel.id);
+                          if (next) {
+                            handleSelectLevel(next);
+                          }
+                        }}
                       >
-                        Tentar Novamente
+                        Avançar para o Próximo Desafio ➔
                       </button>
                     )}
-                    <button 
-                      style={{ ...styles.primaryBtn, flex: 1, background: feedback.correct ? activeTheme.pythonGreen : activeTheme.primary }} 
-                      onClick={() => { playSound("click"); setScreen("roadmap"); }}
-                    >
-                      Voltar ao Mapa
-                    </button>
+                    
+                    <div style={{ display: "flex", gap: 10, justifyContent: "center", width: "100%" }}>
+                      {!feedback.correct && (
+                        <button 
+                          style={{ ...styles.secondaryBtn, flex: 1, borderColor: activeTheme.textMuted, color: activeTheme.text }} 
+                          onClick={() => { playSound("click"); setPhase("question"); }}
+                        >
+                          Tentar Novamente
+                        </button>
+                      )}
+                      <button 
+                        style={{ 
+                          ...styles.secondaryBtn, 
+                          flex: 1, 
+                          borderColor: feedback.correct ? activeTheme.divider : activeTheme.divider, 
+                          color: activeTheme.text 
+                        }} 
+                        onClick={() => { playSound("click"); setScreen("roadmap"); }}
+                      >
+                        Voltar ao Mapa
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1443,31 +1414,31 @@ const THEMES = {
     roadmapLine: "#1e294b"
   },
   light: {
-    bg: "#f8fafc",
+    bg: "linear-gradient(to bottom, #fffbeb, #f0fdf4, #ecfeff)",
     cardBg: "#ffffff",
-    cardBorder: "#e2e8f0",
-    text: "#0f172a",
-    textMuted: "#64748b",
-    primary: "#2563eb",
-    primaryGlow: "rgba(37, 99, 235, 0.08)",
-    success: "#16a34a",
+    cardBorder: "#bbf7d0",
+    text: "#065f46",
+    textMuted: "#047857",
+    primary: "#059669",
+    primaryGlow: "rgba(5, 150, 105, 0.1)",
+    success: "#10b981",
     successBg: "#d1fae5",
-    successText: "#15803d",
-    error: "#dc2626",
+    successText: "#065f46",
+    error: "#ef4444",
     errorBg: "#fee2e2",
-    errorText: "#b91c1c",
-    accent: "#d97706",
+    errorText: "#991b1b",
+    accent: "#f59e0b",
     accentBg: "#fef3c7",
-    pythonGreen: "#16a34a",
+    pythonGreen: "#10b981",
     pythonBlue: "#0284c7",
     headerBg: "#ffffff",
     divider: "#e2e8f0",
     terminalBg: "#0f172a",
     terminalText: "#38bdf8",
-    theoryBg: "#f1f5f9",
+    theoryBg: "#f0fdf4",
     inputBg: "#ffffff",
     inputBorder: "#cbd5e1",
-    roadmapLine: "#cbd5e1"
+    roadmapLine: "#a7f3d0"
   }
 };
 
@@ -1587,6 +1558,8 @@ const styles = {
     fontSize: 15,
     fontWeight: 700,
     transition: "opacity .2s, transform .1s",
+    cursor: "pointer",
+    textAlign: "center"
   },
   secondaryBtn: {
     padding: "10px 16px",
@@ -1605,7 +1578,6 @@ const styles = {
     justifyContent: "center",
   },
   roadmapContainer: {
-    maxWidth: 520,
     width: "100%",
   },
   roadmapWelcome: {
@@ -1875,5 +1847,9 @@ const styles = {
   settingsSection: {
     display: "flex",
     flexDirection: "column",
+  },
+  divider: {
+    height: 1,
+    margin: "12px 0",
   }
 };
