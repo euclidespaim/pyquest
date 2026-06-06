@@ -1,5 +1,7 @@
-// ─── CURRICULUM BANK: 15 MAIN PATH LEVELS + 3 ADVANCED (Total 18 Níveis) ──────
+// ─── CURRICULUM BANK: 22 LEVELS DIVIDED INTO MODULES ─────────────────────────
+
 export const QUESTIONS = [
+  // --- MÓDULO 1: INTRODUÇÃO E CONDICIONAIS (FASES 1 - 15) ---
   {
     id: 1,
     title: "1. Guardando Dados",
@@ -79,6 +81,7 @@ export const QUESTIONS = [
     type: "challenge",
     xp: 30,
     theory: "Chegou a hora do seu primeiro grande desafio prático! Vamos usar a função `print()` para exibir dados na tela (o nosso \"Terminal\").\n\n**Exemplo de saída:**\n```python\nprint(\"Olá mundo!\")\n```\nVocê também pode colocar o nome de uma variável dentro dos parênteses do `print()` para exibir seu valor!\n\n**Desafio:** Crie uma variável chamada `nome` e guarde o texto `\"Link\"` nela. Depois, crie uma variável `moedas` e guarde o número inteiro `50`. Por fim, exiba o nome e as moedas no terminal usando `print(nome)` e `print(moedas)` em linhas separadas.",
+    question: "1. Crie uma variável chamada 'nome' e guarde o texto \"Link\" nela.\n2. Crie uma variável chamada 'moedas' com o número inteiro 50.\n3. Exiba ambas as variáveis no terminal usando print(nome) e print(moedas) em linhas separadas.",
     placeholder: "# 1. Crie a variável nome com o texto \"Link\"\nnome = \"Link\"\n\n# 2. Crie a variável moedas com o valor 50\nmoedas = 50\n\n# 3. Use a função print() para exibir as duas variáveis\n",
     hint: "Escreva:\nprint(nome)\nprint(moedas)"
   },
@@ -173,42 +176,209 @@ export const QUESTIONS = [
     type: "challenge",
     xp: 40,
     theory: "Parabéns por chegar ao último nível da trilha de condicionais! Vamos combinar tudo o que você aprendeu em um sistema real.\n\nImagine que estamos criando um termômetro inteligente.\n\n**Desafio:**\nCrie uma variável chamada `temperatura` e coloque nela o valor `38.2` (representando a febre do paciente).\n\nDepois, escreva uma estrutura condicional para avaliar a temperatura:\n- Se a temperatura for **maior ou igual a 37.8**, exiba `\"Febre\"` usando o `print`.\n- Se a temperatura estiver **entre 37.0 e 37.7** (inclusive), exiba `\"Subfebril\"`.\n- Caso contrário (menor que 37.0), exiba `\"Normal\"`.\n\n*Dica de Sintaxe:* No Python, você pode usar `elif temperatura >= 37.0 and temperatura <= 37.7:` ou simplesmente `elif temperatura >= 37.0:` (pois o `if` anterior já capturou temperaturas maiores ou iguais a 37.8). Não se esqueça dos dois pontos `:` e dos 4 espaços de indentação!",
+    question: "1. Declare a variável 'temperatura' com o valor decimal 38.2.\n2. Crie uma estrutura condicional (if, elif, else) que avalie:\n   - Se temperatura >= 37.8: exiba \"Febre\" com print().\n   - Se temperatura estiver entre 37.0 e 37.7 (inclusive): exiba \"Subfebril\" com print().\n   - Caso contrário: exiba \"Normal\" com print().",
     placeholder: "# 1. Declare a variável temperatura com o valor 38.2\ntemperatura = 38.2\n\n# 2. Escreva as condicionais if, elif e else abaixo\n",
     hint: "Escreva:\nif temperatura >= 37.8:\n    print(\"Febre\")\nelif temperatura >= 37.0:\n    print(\"Subfebril\")\nelse:\n    print(\"Normal\")"
   },
+
+  // --- MÓDULO 2: COLEÇÕES, LAÇOS E FUNÇÕES (FASES 16 - 22) ---
   {
     id: 16,
-    title: "16. Listas e Coleções",
+    title: "16. A Lista de Equipamentos",
     topic: "Coleções",
     type: "fill",
     xp: 20,
-    theory: "Listas são usadas para guardar múltiplos itens em uma única variável. Criamos uma lista usando colchetes `[]` e separamos os itens por vírgulas.\n\n**Exemplo:**\n`nomes = [\"Link\", \"Zelda\"]`\n\nPodemos acessar itens pelo índice (começando do zero): `nomes[0]` retornará `\"Link\"`.",
-    code: "jogadores = [___, \"Zelda\"]",
-    answer: "\"Link\"",
-    placeholder: "Complete com \"Link\" (com aspas)",
-    hint: "Coloque o texto \"Link\" com aspas duplas."
+    theory: "Listas são usadas para guardar múltiplos itens em uma única variável. No nosso RPG, podemos guardar todas as armas do guerreiro em uma lista! Criamos uma lista usando colchetes `[]` e separamos os itens por vírgula.\n\n**Exemplo:**\n`armas = [\"espada\", \"machado\"]`\n\nPodemos acessar itens pelo seu índice (começando do zero): `armas[0]` retornará `\"espada\"`.",
+    code: "inventario = [___, \"escudo\", \"pocao\"]",
+    answer: "\"espada\"",
+    placeholder: "Complete com \"espada\" (com aspas)",
+    hint: "Insira a palavra \"espada\" entre aspas duplas como primeiro item da lista."
   },
   {
     id: 17,
-    title: "17. Funções Reutilizáveis (def)",
+    title: "17. Gerenciando a Mochila",
+    topic: "Coleções",
+    type: "quiz",
+    xp: 20,
+    theory: "Durante a aventura, você derrota monstros e encontra novos tesouros. Em Python, listas possuem ferramentas embutidas para manipular itens:\n- `mochila.append(item)`: adiciona um novo item ao final da mochila.\n- `mochila.remove(item)`: exclui a primeira ocorrência daquele item.\n- A função global `len(mochila)`: calcula a quantidade total de itens que você carrega.\n\n**Exemplo:**\n```python\nmochila = []\nmochila.append(\"cajado\")  # mochila vira [\"cajado\"]\nprint(len(mochila))      # imprime 1\n```",
+    question: "Como adicionamos a string 'cajado' ao final da lista chamada 'mochila'?",
+    options: ["mochila.add('cajado')", "mochila.append('cajado')", "mochila.push('cajado')", "append('cajado', mochila)"],
+    answer: 1,
+    explanation: "O método .append() é a função correta em Python para adicionar itens no fim de uma lista."
+  },
+  {
+    id: 18,
+    title: "18. Batalha de Turnos",
+    topic: "Repetições",
+    type: "fill",
+    xp: 20,
+    theory: "Estruturas de repetição executam um bloco de código repetidas vezes.\n\nO laço **`while`** (enquanto) repete o código **enquanto** uma condição for verdadeira. Em um combate, podemos atacar o inimigo enquanto a vida dele for maior que 0!\n\n**Exemplo:**\n```python\nhp_inimigo = 30\nwhile hp_inimigo > 0:\n    print(\"Golpe!\")\n    hp_inimigo = hp_inimigo - 10\n```",
+    code: "hp_goblin = 20\n___ hp_goblin > 0:\n    print(\"Atacar Goblin!\")\n    hp_goblin = hp_goblin - 10",
+    answer: "while",
+    placeholder: "Complete com o enquanto em inglês",
+    hint: "Palavra-chave do laço que testa a condição a cada turno de batalha."
+  },
+  {
+    id: 19,
+    title: "19. Saqueando Baús",
+    topic: "Repetições",
+    type: "quiz",
+    xp: 20,
+    theory: "O laço **`for`** é ideal para varrer todos os elementos de uma lista (como saquear uma lista de baús) ou repetir ações um número exato de vezes com o auxílio da função `range()`.\n\n**Exemplo 1 (Listas):**\n```python\nbaus = [\"ouro\", \"rubi\"]\nfor b in baus:\n    print(b)  # Imprime ouro, depois rubi\n```\n**Exemplo 2 (Range):**\n```python\nfor x in range(3):\n    print(x)  # Imprime 0, 1 e 2\n```",
+    question: "Se executarmos: baus = ['ouro', 'rubi']; for b in baus: print(b), qual será a primeira palavra impressa no console?",
+    options: ["rubi", "ouro", "b", "erro"],
+    answer: 1,
+    explanation: "O laço for percorre a lista baus em ordem, portanto, o primeiro elemento acessado e impresso é 'ouro'."
+  },
+  {
+    id: 20,
+    title: "20. Atributos do Monstro",
+    topic: "Coleções",
+    type: "quiz",
+    xp: 20,
+    theory: "Dicionários guardam informações em pares de **chave: valor**. Eles são excelentes para representar as fichas de atributos de monstros de RPG.\n\nDeclaramos dicionários usando chaves `{}`.\n\n**Exemplo:**\n```python\ndragao = {\n    \"nome\": \"Smaug\",\n    \"hp\": 95\n}\nprint(dragao[\"nome\"])  # Exibe Smaug\n```",
+    question: "Como acessamos o valor do 'hp' no dicionário chamado 'dragao'?",
+    options: ["dragao.hp", "dragao['hp']", "dragao(hp)", "dragao.get(hp)"],
+    answer: 1,
+    explanation: "Acessamos dados de dicionários em Python passando a chave correspondente entre colchetes."
+  },
+  {
+    id: 21,
+    title: "21. O Feitiço de Fogo",
     topic: "Modularização",
     type: "quiz",
     xp: 25,
-    theory: "Funções são blocos de código que só rodam quando são chamadas, ajudando a evitar repetição. Criamos funções com a palavra `def` seguida do nome e parênteses.\n\n**Exemplo:**\n```python\ndef saudar():\n    print(\"Olá!\")\n```",
-    question: "Qual palavra-chave é usada para iniciar a definição de uma função em Python?",
+    theory: "Funções são blocos de código que só rodam quando chamadas, evitando reescrever comandos. Podemos criar funções de magias com a palavra `def` seguida do nome e parênteses.\n\n**Exemplo:**\n```python\ndef conjurar_fogo():\n    print(\"Lança-chamas!\")\n```",
+    question: "Qual palavra-chave é usada para iniciar a definição de uma magia ou função em Python?",
     options: ["function", "def", "create", "define"],
     answer: 1,
     explanation: "def é a palavra-chave reservada do Python para definir uma função (abreviação de define)."
   },
   {
-    id: 18,
-    title: "18. Desafio Mestre: A Calculadora",
+    id: 22,
+    title: "22. Desafio Mestre: O Multiplicador de Dano",
     topic: "Modularização",
     type: "challenge",
     xp: 40,
-    theory: "Chegou a hora de provar que você é um mestre supremo em Python!\n\n**Desafio:** Crie uma função chamada `somar(a, b)` que recebe dois parâmetros, calcula a soma deles e imprime o resultado usando `print()`. Depois de declarar a função, chame-a passando os números `10` e `20` como argumentos.\n\n**Exemplo de estrutura:**\n```python\ndef somar(a, b):\n    print(a + b)\n\nsomar(10, 20)\n```",
-    placeholder: "# Defina a função somar(a, b) abaixo e chame-a no final\n",
-    hint: "Escreva:\ndef somar(a, b):\n    print(a + b)\n\nsomar(10, 20)"
+    theory: "Chegou a hora de provar que você é um mestre supremo em Python!\n\n**Desafio:** Crie uma função chamada `calcular_dano(base, bonus)` que recebe dois parâmetros, calcula o dano total somando ambos, e imprime o resultado usando `print()`. Depois de declarar a função, chame-a passando os números `50` (dano base) e `15` (dano bônus) como argumentos.\n\n**Exemplo de estrutura:**\n```python\ndef calcular_dano(base, bonus):\n    print(base + bonus)\n\ncalcular_dano(50, 15)\n```",
+    question: "1. Defina uma função chamada 'calcular_dano(base, bonus)' que recebe dois parâmetros.\n2. Dentro da função, exiba a soma de 'base' e 'bonus' usando print(base + bonus).\n3. Fora do bloco da função, chame a função passando os números 50 e 15 como argumentos: calcular_dano(50, 15).",
+    placeholder: "# Defina a função calcular_dano(base, bonus) abaixo e chame-a no final\n",
+    hint: "Escreva:\ndef calcular_dano(base, bonus):\n    print(base + bonus)\n\ncalcular_dano(50, 15)"
+  },
+  {
+    id: 23,
+    title: "23. Moldes e Objetos (POO)",
+    topic: "Orientação a Objetos",
+    type: "quiz",
+    xp: 20,
+    theory: "Na Programação Orientada a Objetos (POO), uma **classe** é como uma blueprint ou molde (ex: a receita para criar um guerreiro ou mago). Um **objeto** é a instância real criada a partir desse molde (ex: o guerreiro 'Aragorn').\n\nA classe define a estrutura, e o objeto armazena os dados reais.",
+    question: "Se definirmos a classe 'Dragao', e criarmos 'furia_da_noite = Dragao()', o que 'furia_da_noite' representa?",
+    options: ["Uma classe", "Uma variável simples do tipo int", "Um objeto (instância) da classe Dragao", "Uma função global"],
+    answer: 2,
+    explanation: "furia_da_noite é um objeto real criado a partir do molde/classe Dragao!"
+  },
+  {
+    id: 24,
+    title: "24. O Construtor __init__",
+    topic: "Orientação a Objetos",
+    type: "fill",
+    xp: 20,
+    theory: "Para inicializar as propriedades de um objeto quando ele é criado, usamos a função especial **`__init__`** (chamada de construtor).\n\nNo Python, todo método dentro de uma classe deve ter **`self`** como primeiro parâmetro. O `self` aponta para o próprio objeto sendo configurado.\n\n**Exemplo:**\n```python\nclass Armadura:\n    def __init__(self, defesa):\n        self.defesa = defesa\n```",
+    code: "class Escudo:\n    ___ __init__(self, resistencia):\n        self.resistencia = resistencia",
+    answer: "def",
+    placeholder: "Complete com a palavra-chave de função",
+    hint: "Usamos 'def' para declarar o método construtor __init__ dentro da classe."
+  },
+  {
+    id: 25,
+    title: "25. Ações e o parâmetro self",
+    topic: "Orientação a Objetos",
+    type: "quiz",
+    xp: 20,
+    theory: "Funções definidas dentro de uma classe são chamadas de **métodos**. Eles definem as ações que os objetos podem realizar.\n\nPara acessar as propriedades do objeto de dentro de um método, usamos `self.nome_da_propriedade`.\n\n**Exemplo:**\n```python\nclass Mago:\n    def __init__(self, mana):\n        self.mana = mana\n    def conjurar(self):\n        print(\"Feitiço conjurado com mana \" + str(self.mana))\n```",
+    question: "O que o parâmetro 'self' representa em um método de classe no Python?",
+    options: ["O nome da classe", "O próprio objeto que chamou o método", "Uma variável global do sistema", "Uma palavra qualquer que pode ser omitida"],
+    answer: 1,
+    explanation: "O 'self' refere-se à instância específica do objeto que está executando a ação."
+  },
+  {
+    id: 26,
+    title: "26. Desafio: O Herói da Masmorra",
+    topic: "Orientação a Objetos",
+    type: "challenge",
+    xp: 35,
+    theory: "Vamos colocar a POO em prática! Crie a classe `Heroi` com as seguintes especificações:\n\n1. O construtor `__init__(self, nome, hp)` deve salvar os atributos `self.nome` e `self.hp`.\n2. Um método `atacar(self)` que imprime a mensagem: `self.nome + \" atacou!\"`.\n3. Instancie o herói guardando na variável `h` com o comando `h = Heroi(\"Aragorn\", 100)`.\n4. Execute a ação de ataque chamando `h.atacar()`.",
+    question: "1. Crie a classe 'Heroi'.\n2. Crie o construtor salvando os atributos 'nome' e 'hp'.\n3. Crie o método 'atacar(self)' que imprime o nome do herói concatenado com ' atacou!'.\n4. Fora da classe, instancie 'h = Heroi(\"Aragorn\", 100)' e chame 'h.atacar()'.",
+    placeholder: "# Defina a classe Heroi e realize o ataque do Aragorn abaixo\n",
+    hint: "Defina:\nclass Heroi:\n    def __init__(self, nome, hp):\n        self.nome = nome\n        self.hp = hp\n    def atacar(self):\n        print(self.nome + \" atacou!\")\n\nh = Heroi(\"Aragorn\", 100)\nh.atacar()"
+  },
+  {
+    id: 27,
+    title: "27. Capturando Exceções com try/except",
+    topic: "Tratamento de Erros",
+    type: "fill",
+    xp: 20,
+    theory: "Erros no meio do jogo podem travar tudo! Para capturar erros sem quebrar a execução, usamos os blocos **`try`** e **`except`**.\n\nO Python tenta rodar o código dentro do bloco `try`. Se ocorrer algum erro (exceção), ele para imediatamente e vai para o bloco `except`.\n\n**Exemplo:**\n```python\ntry:\n    divisao = 10 / 0\nexcept:\n    print(\"Divisão por zero capturada!\")\n```",
+    code: "___:\n    dano = 100 / 0\nexcept:\n    print(\"Erro ao calcular dano\")",
+    answer: "try",
+    placeholder: "Complete com a palavra-chave de tentativa",
+    hint: "Palavra-chave inglesa que significa 'tentar'."
+  },
+  {
+    id: 28,
+    title: "28. Gravando Pergaminhos (Escrita)",
+    topic: "Manipulação de Arquivos",
+    type: "quiz",
+    xp: 20,
+    theory: "Para salvar informações em arquivos no Python, usamos a função `open(nome_arquivo, modo)`. O modo `'w'` (write) serve para **escrever** (criando o arquivo ou limpando o anterior).\n\nPara escrever um texto, usamos o método `.write(conteudo)` e sempre fechamos com `.close()`.\n\n**Exemplo:**\n```python\narq = open(\"pergaminho.txt\", \"w\")\narq.write(\"Magia Secreta\")\narq.close()\n```",
+    question: "Qual modo de abertura de arquivo devemos usar na função open() para escrever e substituir o conteúdo antigo?",
+    options: ["'r' (read)", "'w' (write)", "'x' (execute)", "'a' (append)"],
+    answer: 1,
+    explanation: "O modo 'w' abre o arquivo para escrita, sobrescrevendo qualquer conteúdo existente."
+  },
+  {
+    id: 29,
+    title: "29. Decifrando Runas (Leitura)",
+    topic: "Manipulação de Arquivos",
+    type: "fill",
+    xp: 20,
+    theory: "Para ler o conteúdo de um arquivo, usamos a função `open(nome_arquivo, modo)` com o modo `'r'` (read - leitura) e o método `.read()` para obter todo o texto do arquivo.\n\n**Exemplo:**\n```python\narq = open(\"pergaminho.txt\", \"r\")\nconteudo = arq.read()\narq.close()\n```",
+    code: "arquivo = open(\"runas.txt\", ___)\nrunas = arquivo.read()\narquivo.close()",
+    answer: "\"r\"",
+    placeholder: "Complete com o modo de leitura de arquivo (com aspas)",
+    hint: "Use a letra r entre aspas para indicar leitura: \"r\""
+  },
+  {
+    id: 30,
+    title: "30. Desafio Final: O Gerador de Personagem NPC",
+    topic: "Arquivos & OOP",
+    type: "challenge",
+    xp: 50,
+    theory: "Parabéns, você chegou ao desafio final! Vamos criar o NPC Gimli e salvar seus dados em um arquivo usando POO e o gerenciador de contexto `with`.\n\nCrie a classe `Npc` com as seguintes especificações:\n1. Construtor `__init__(self, nome, classe)` salvando `self.nome` e `self.classe`.\n2. Um método `salvar(self)` que utiliza `with open(\"npc.txt\", \"w\") as f:` para escrever a string: `self.nome + \" - \" + self.classe` no arquivo.\n3. Instancie o NPC com `npc = Npc(\"Gimli\", \"Guerreiro\")`.\n4. Chame o método `npc.salvar()`.",
+    question: "1. Crie a classe 'Npc' com atributos 'nome' e 'classe'.\n2. Crie o método 'salvar(self)' salvando o texto: nome + ' - ' + classe no arquivo 'npc.txt' usando o bloco 'with open'.\n3. Instancie 'npc = Npc(\"Gimli\", \"Guerreiro\")' e chame 'npc.salvar()'.",
+    placeholder: "# Defina a classe Npc e salve seus dados no arquivo npc.txt abaixo\n",
+    hint: "Defina:\nclass Npc:\n    def __init__(self, nome, classe):\n        self.nome = nome\n        self.classe = classe\n    def salvar(self):\n        with open(\"npc.txt\", \"w\") as f:\n            f.write(self.nome + \" - \" + self.classe)\n\nnpc = Npc(\"Gimli\", \"Guerreiro\")\nnpc.salvar()"
+  }
+];
+
+export const MODULES = [
+  {
+    id: "m1",
+    title: "Módulo 1: Fundamentos & Condicionais",
+    description: "Variáveis, tipos primitivos de dados e tomadas de decisões lógicas com if/else.",
+    questions: QUESTIONS.filter(q => q.id <= 15)
+  },
+  {
+    id: "m2",
+    title: "Módulo 2: Coleções, Repetições & Funções",
+    description: "Listas, dicionários, laços for/while e criação de funções reutilizáveis.",
+    questions: QUESTIONS.filter(q => q.id > 15 && q.id <= 22)
+  },
+  {
+    id: "m3",
+    title: "Módulo 3: POO, Exceções & Arquivos",
+    description: "Classes, construtores, métodos de instância, tratamento de exceções com try/except e leitura/escrita de arquivos.",
+    questions: QUESTIONS.filter(q => q.id >= 23 && q.id <= 30)
   }
 ];
 
@@ -217,7 +387,11 @@ export const BADGES = [
   { id: "var_expert", name: "Mestre das Caixas", icon: "📦", desc: "Completou todos os 7 primeiros níveis sobre Variáveis e Tipos.", criteria: (comp) => Array.from({ length: 7 }, (_, i) => i + 1).every(id => comp[id] === "correct") },
   { id: "decision_maker", name: "Tomador de Decisão", icon: "⚖️", desc: "Completou os primeiros desafios de condicionais (Nível 8, 9 e 10).", criteria: (comp) => ["8", "9", "10"].every(id => comp[id] === "correct") },
   { id: "streak_3", name: "Fogo no Cérebro", icon: "🔥", desc: "Acertou 3 ou mais questões seguidas!", criteria: (_, streak) => streak >= 3 },
-  { id: "pythonista_supremo", name: "Mestre da Febre", icon: "🐍", desc: "Venceu o desafio final da Balança da Febre (Nível 15).", criteria: (comp) => comp["15"] === "correct" }
+  { id: "pythonista_supremo", name: "Mestre da Febre", icon: "🐍", desc: "Venceu o desafio final da Balança da Febre (Nível 15).", criteria: (comp) => comp["15"] === "correct" },
+  { id: "loop_master", name: "Mestre dos Ciclos", icon: "🌀", desc: "Completou as fases de repetição (Níveis 18 e 19).", criteria: (comp) => ["18", "19"].every(id => comp[id] === "correct") },
+  { id: "ninja_calculator", name: "Calculista Lendário", icon: "🧮", desc: "Venceu o desafio final do Módulo 2 (Nível 22).", criteria: (comp) => comp["22"] === "correct" },
+  { id: "oop_master", name: "Arquiteto de Classes", icon: "🏛️", desc: "Instanciou o seu primeiro objeto guerreiro da classe Heroi no Nível 26.", criteria: (comp) => comp["26"] === "correct" },
+  { id: "npc_creator", name: "Criador de Mundos", icon: "💾", desc: "Criou e salvou o Gimli no VFS local concluindo o Nível 30.", criteria: (comp) => comp["30"] === "correct" }
 ];
 
 export const RANKS = [
@@ -225,7 +399,10 @@ export const RANKS = [
   { name: "Aprendiz de Variáveis", min: 50, icon: "📗" },
   { name: "Desenvolvedor Jr", min: 120, icon: "💻" },
   { name: "Pythonista de Elite", min: 200, icon: "🐍" },
-  { name: "Mestre das Condições", min: 280, icon: "⚡" }
+  { name: "Mestre das Condições", min: 280, icon: "⚡" },
+  { name: "Lenda do Código", min: 380, icon: "👑" },
+  { name: "Arquiteto Pythônico", min: 550, icon: "🏛️" },
+  { name: "Mestre Supremo", min: 700, icon: "🔮" }
 ];
 
 export function getRank(xp) {
@@ -515,51 +692,264 @@ export const SUB_QUESTIONS = {
   "16-B": {
     id: "16-B", parentId: 16, type: "fill", topic: "Coleções", xp: 5,
     title: "Sub-fase 16-B: O Inventário Organizado",
-    question: "Sua mochila de itens é descrita por `itens = [\"espada\", \"escudo\", \"arco\"]`. Complete a lacuna para resgatar o primeiro elemento (índice zero) e equipar sua espada:",
-    code: "equipar = itens[___]",
+    question: "Sua mochila de itens é descrita por `inventario = [\"espada\", \"escudo\", \"pocao\"]`. Complete a lacuna para resgatar o primeiro elemento (índice zero) e equipar sua espada:",
+    code: "equipar = inventario[___]",
     answer: "0",
     hint: "Digite apenas o índice numérico correspondente ao primeiro elemento da lista."
   },
 
   // NÍVEL 17
   "17-A": {
-    id: "17-A", parentId: 17, type: "quiz", topic: "Modularização", xp: 5,
-    title: "Sub-fase 17-A: O que são Parâmetros?",
-    question: "Para que servem os parâmetros/argumentos de uma função?",
+    id: "17-A", parentId: 17, type: "quiz", topic: "Coleções", xp: 5,
+    title: "Sub-fase 17-A: Erro de Remoção",
+    question: "O que acontece se tentarmos remover um item que não existe na mochila usando o método remove()?",
+    options: ["O Python ignora silenciosamente", "O Python gera um erro (ValueError) e para o programa", "O Python remove o último elemento", "O item é criado automaticamente no final"],
+    answer: 1,
+    explanation: "Se o valor fornecido não existir na lista, o método remove() gera um erro (ValueError) que interrompe a execução."
+  },
+  "17-B": {
+    id: "17-B", parentId: 17, type: "fill", topic: "Coleções", xp: 5,
+    title: "Sub-fase 17-B: O Comprimento da Mochila",
+    question: "Complete a lacuna com o nome da função global necessária para contar quantos elementos existem na lista 'mochila':",
+    code: "total = ___(mochila)",
+    answer: "len",
+    hint: "Palavra-chave curta (3 letras) para medir o tamanho/comprimento de coleções (length)."
+  },
+
+  // NÍVEL 18
+  "18-A": {
+    id: "18-A", parentId: 18, type: "quiz", topic: "Repetições", xp: 5,
+    title: "Sub-fase 18-A: O Perigo do Loop Infinito",
+    question: "Qual das seguintes condições abaixo causará um loop infinito se não for alterada?",
+    options: ["while False:", "while True:", "while hp_inimigo < 0 (começando em 50):", "while 10 < 2:"],
+    answer: 1,
+    explanation: "A instrução 'while True:' testa uma condição eternamente verdadeira, gerando um loop infinito se não houver interrupção."
+  },
+  "18-B": {
+    id: "18-B", parentId: 18, type: "fill", topic: "Repetições", xp: 5,
+    title: "Sub-fase 18-B: Causando Dano",
+    question: "Complete a lacuna para subtrair/diminuir o HP do goblin em 10 pontos a cada golpe do guerreiro:",
+    code: "hp_goblin = hp_goblin ___ 10",
+    answer: "-",
+    hint: "Use o símbolo aritmético de subtração."
+  },
+
+  // NÍVEL 19
+  "19-A": {
+    id: "19-A", parentId: 19, type: "quiz", topic: "Repetições", xp: 5,
+    title: "Sub-fase 19-A: Os Parâmetros do Range",
+    question: "Quantos baús serão saqueados se usarmos range(1, 5) em Python?",
+    options: ["4 baús", "5 baús", "3 baús", "1 baú"],
+    answer: 0,
+    explanation: "A função range(1, 5) gera os números 1, 2, 3, 4 (ou seja, 4 valores no total), parando antes do 5."
+  },
+  "19-B": {
+    id: "19-B", parentId: 19, type: "fill", topic: "Repetições", xp: 5,
+    title: "Sub-fase 19-B: Varrendo a Mochila",
+    question: "Preencha a lacuna para estruturar o laço 'for' e exibir cada elemento contido na lista 'mochila':",
+    code: "___ item in mochila:\n    print(item)",
+    answer: "for",
+    hint: "Use a palavra-chave de laço iterador padrão do Python."
+  },
+
+  // NÍVEL 20
+  "20-A": {
+    id: "20-A", parentId: 20, type: "quiz", topic: "Coleções", xp: 5,
+    title: "Sub-fase 20-A: Declaração de Dicionários",
+    question: "Qual das opções abaixo declara corretamente um dicionário chave-valor em Python?",
+    options: ["d = ['nome', 'Link']", "d = {'nome' = 'Link'}", "d = {'nome': 'Link'}", "d = ('nome': 'Link')"],
+    answer: 2,
+    explanation: "Dicionários usam chaves '{}' e separam a chave do valor com dois-pontos ':'."
+  },
+  "20-B": {
+    id: "20-B", parentId: 20, type: "fill", topic: "Coleções", xp: 5,
+    title: "Sub-fase 20-B: Modificando Valores",
+    question: "Preencha a lacuna para redefinir o HP do dragão no dicionário para cem pontos:",
+    code: "dragao[___] = 100",
+    answer: "\"hp\"",
+    hint: "Passe o nome da chave entre aspas duplas, por exemplo: \"hp\"."
+  },
+
+  // NÍVEL 21
+  "21-A": {
+    id: "21-A", parentId: 21, type: "quiz", topic: "Modularização", xp: 5,
+    title: "Sub-fase 21-A: O que são Parâmetros?",
+    question: "Para que servem os parâmetros/argumentos de uma magia?",
     options: ["Para enviar informações de entrada para que a função possa processá-las", "Para renomear a função", "Para forçar a função a parar", "Para criar variáveis globais automáticas"],
     answer: 0,
     explanation: "Os parâmetros funcionam como variáveis locais que recebem valores quando chamamos a função, tornando-a flexível."
   },
-  "17-B": {
-    id: "17-B", parentId: 17, type: "fill", topic: "Modularização", xp: 5,
-    title: "Sub-fase 17-B: O Feitiço de Fogo",
-    question: "Crie a definição de uma função chamada 'lancar_fogo' para que seu mago possa disparar chamas a qualquer momento. Preencha com a palavra-chave de criação:",
-    code: "___ lancar_fogo():\n    print(\"Fogo!\")",
+  "21-B": {
+    id: "21-B", parentId: 21, type: "fill", topic: "Modularização", xp: 5,
+    title: "Sub-fase 21-B: O Feitiço de Cura",
+    question: "Crie a definição de uma função chamada 'conjurar_cura' para que seu mago possa recuperar vida. Preencha com a palavra-chave de criação:",
+    code: "___ conjurar_cura():\n    print(\"Curado!\")",
     answer: "def",
     hint: "Palavra-chave utilizada para definir funções em Python."
   },
-  // NÍVEL 18
-  "18-A": {
-    id: "18-A", parentId: 18, type: "quiz", topic: "Modularização", xp: 5,
-    title: "Sub-fase 18-A: Escopo Local",
+
+  // NÍVEL 22
+  "22-A": {
+    id: "22-A", parentId: 22, type: "quiz", topic: "Modularização", xp: 5,
+    title: "Sub-fase 22-A: Escopo Local",
     question: "Uma variável criada dentro de uma função pode ser acessada livremente fora dela?",
     options: ["Não, ela tem escopo local e existe apenas dentro da função", "Sim, variáveis em Python são sempre globais", "Sim, desde que a função já tenha sido chamada", "Apenas se for um número inteiro"],
     answer: 0,
     explanation: "Variáveis declaradas dentro de uma função nascem e morrem ali dentro. Isso é chamado de escopo local."
   },
-  "18-B": {
-    id: "18-B", parentId: 18, type: "fill", topic: "Modularização", xp: 5,
-    title: "Sub-fase 18-B: Ativando a Cura",
-    question: "Seu parceiro de clã está ferido no combate. Chame a função de cura 'curar' passando a quantidade de 50 pontos de vida como argumento:",
-    code: "___(50)",
-    answer: "curar",
-    hint: "Escreva exatamente o nome da função que realiza a cura."
+  "22-B": {
+    id: "22-B", parentId: 22, type: "fill", topic: "Modularização", xp: 5,
+    title: "Sub-fase 22-B: Ativando a Magia",
+    question: "Seu guerreiro precisa lançar fogo em combate. Chame a função de fogo 'lancar_fogo' passando a quantidade de 10 de mana como argumento:",
+    code: "___(10)",
+    answer: "lancar_fogo",
+    hint: "Escreva exatamente o nome da função que realiza o ataque de chamas."
+  },
+
+  // NÍVEL 23
+  "23-A": {
+    id: "23-A", parentId: 23, type: "quiz", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 23-A: Múltiplas Instâncias",
+    question: "Quantos objetos (instâncias) podemos criar a partir de uma única classe?",
+    options: ["Apenas um", "Nenhum", "Infinitos/Quantos forem necessários", "Apenas 10"],
+    answer: 2,
+    explanation: "Uma classe serve como um modelo de dados reutilizável, permitindo criar quantos objetos forem necessários."
+  },
+  "23-B": {
+    id: "23-B", parentId: 23, type: "fill", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 23-B: Instanciação Simples",
+    question: "Instancie um objeto da classe 'Heroi' sem passar parâmetros adicionais e guarde na variável 'guerreiro':",
+    code: "guerreiro = ___()",
+    answer: "Heroi",
+    hint: "Escreva o nome da classe para chamá-la como uma função: Heroi."
+  },
+
+  // NÍVEL 24
+  "24-A": {
+    id: "24-A", parentId: 24, type: "quiz", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 24-A: Momento do Construtor",
+    question: "O construtor __init__ é executado em qual momento da vida do objeto?",
+    options: ["Apenas no final do programa", "Automaticamente quando o objeto é instanciado/criado", "Somente se o chamarmos manualmente", "Quando o objeto é excluído"],
+    answer: 1,
+    explanation: "O construtor __init__ roda automaticamente assim que instanciamos a classe."
+  },
+  "24-B": {
+    id: "24-B", parentId: 24, type: "fill", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 24-B: Atributos no self",
+    question: "Complete a inicialização do atributo 'hp' do mago usando o self para salvá-lo na instância:",
+    code: "class Mago:\n    def __init__(self, hp):\n        ___ = hp",
+    answer: "self.hp",
+    hint: "Acesse a propriedade do objeto usando a palavra-chave de referência self seguida de ponto e nome da propriedade: self.hp."
+  },
+
+  // NÍVEL 25
+  "25-A": {
+    id: "25-A", parentId: 25, type: "quiz", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 25-A: Parâmetros em Métodos",
+    question: "Podemos passar argumentos adicionais para um método de classe além do 'self'?",
+    options: ["Não, métodos só aceitam self", "Sim, basta adicioná-los após o self nos parâmetros", "Sim, mas apenas um argumento do tipo texto", "Não, o Python proíbe métodos com múltiplos parâmetros"],
+    answer: 1,
+    explanation: "Podemos declarar qualquer número de argumentos extras. O self deve apenas ser o primeiro deles."
+  },
+  "25-B": {
+    id: "25-B", parentId: 25, type: "fill", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 25-B: Acessando Dados no Método",
+    question: "No método de rugido do Dragão, exiba o rugido concatenando o nome do dragão. Complete o código:",
+    code: "class Dragao:\n    def __init__(self, nome):\n        self.nome = nome\n    def rugir(self):\n        print(___ + \" grita: ROAR!\")",
+    answer: "self.nome",
+    hint: "Recupere o atributo de instância 'nome' do próprio dragão usando self."
+  },
+
+  // NÍVEL 26
+  "26-A": {
+    id: "26-A", parentId: 26, type: "quiz", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 26-A: Esquecendo o self",
+    question: "O que acontece se omitirmos o parâmetro 'self' na definição de um método da instância?",
+    options: ["Funciona perfeitamente", "O Python gerará um erro ao tentarmos executar o método", "O método é transformado em construtor", "A classe inteira deixa de existir"],
+    answer: 1,
+    explanation: "Sem o self, o Python não consegue vincular a instância que chamou o método, gerando TypeError."
+  },
+  "26-B": {
+    id: "26-B", parentId: 26, type: "fill", topic: "Orientação a Objetos", xp: 5,
+    title: "Sub-fase 26-B: Criando o Segundo Herói",
+    question: "Crie uma nova instância de Heroi chamada 'Arthur' com 80 de HP, guardando-a na variável 'h2':",
+    code: "h2 = ___(\"Arthur\", 80)",
+    answer: "Heroi",
+    hint: "Invoque a classe Heroi passando os parâmetros necessários."
+  },
+
+  // NÍVEL 27
+  "27-A": {
+    id: "27-A", parentId: 27, type: "quiz", topic: "Tratamento de Erros", xp: 5,
+    title: "Sub-fase 27-A: A Ação do except",
+    question: "O bloco de código dentro da instrução 'except:' executa em qual situação?",
+    options: ["Sempre que o programa inicia", "Apenas se um erro ocorrer dentro do bloco 'try:'", "Nunca, é apenas ilustrativo", "Se a bateria estiver baixa"],
+    answer: 1,
+    explanation: "O except é ativado exclusivamente se o try falhar por alguma exceção ou erro."
+  },
+  "27-B": {
+    id: "27-B", parentId: 27, type: "fill", topic: "Tratamento de Erros", xp: 5,
+    title: "Sub-fase 27-B: O Escudo de Mana",
+    question: "Proteja a conjuração do feitiço para evitar falhas fatais no jogo. Complete a estrutura:",
+    code: "try:\n    conjurar_magia()\n___:\n    print(\"Mana insuficiente!\")",
+    answer: "except",
+    hint: "Utilize a palavra-chave de captura de erros associada ao try."
+  },
+
+  // NÍVEL 28
+  "28-A": {
+    id: "28-A", parentId: 28, type: "quiz", topic: "Manipulação de Arquivos", xp: 5,
+    title: "Sub-fase 28-A: Substituição de Conteúdo",
+    question: "O que acontece se abrirmos um arquivo com o modo 'w' (write) e ele já contiver texto?",
+    options: ["O texto existente é totalmente apagado e substituído", "O novo texto é colocado no fim", "Dá erro de arquivo bloqueado", "O arquivo é excluído"],
+    answer: 0,
+    explanation: "O modo de escrita 'w' apaga o conteúdo do arquivo anterior e cria um novo a partir do zero."
+  },
+  "28-B": {
+    id: "28-B", parentId: 28, type: "fill", topic: "Manipulação de Arquivos", xp: 5,
+    title: "Sub-fase 28-B: Fechando Conexões",
+    question: "Feche a conexão do arquivo aberto na variável 'p' após terminar de gravar os atributos do dragão:",
+    code: "p = open(\"pergaminho.txt\", \"w\")\np.write(\"Dano: 900\")\np.___()",
+    answer: "close",
+    hint: "Use o método que libera o arquivo e fecha a gravação."
+  },
+
+  // NÍVEL 29
+  "29-A": {
+    id: "29-A", parentId: 29, type: "quiz", topic: "Manipulação de Arquivos", xp: 5,
+    title: "Sub-fase 29-A: Arquivo Inexistente",
+    question: "O que acontece se abrirmos um arquivo inexistente no modo de leitura 'r'?",
+    options: ["O Python cria um arquivo vazio automaticamente", "Ocorre um erro (FileNotFoundError)", "O programa trava sem aviso", "O arquivo é importado"],
+    answer: 1,
+    explanation: "A leitura exige a existência prévia do arquivo; caso contrário, ocorre um erro de sistema."
+  },
+  "29-B": {
+    id: "29-B", parentId: 29, type: "fill", topic: "Manipulação de Arquivos", xp: 5,
+    title: "Sub-fase 29-B: Carregando Diários",
+    question: "Carregue todo o texto gravado no arquivo 'diario.txt' aberto na variável 'd':",
+    code: "d = open(\"diario.txt\", \"r\")\nconteudo = d.___()\nd.close()",
+    answer: "read",
+    hint: "Escreva o nome do método de leitura total do arquivo."
+  },
+
+  // NÍVEL 30
+  "30-A": {
+    id: "30-A", parentId: 30, type: "quiz", topic: "Arquivos & OOP", xp: 5,
+    title: "Sub-fase 30-A: Vantagens de Contexto",
+    question: "Qual é a principal vantagem de usar 'with open(...) as f:'?",
+    options: ["O código roda mais rápido", "Garante o fechamento automático do arquivo mesmo se ocorrerem erros no bloco", "Impede alterações futuras", "É o único jeito de escrever"],
+    answer: 1,
+    explanation: "O with é um gerenciador de recursos que fecha automaticamente o arquivo no final do bloco, prevenindo vazamentos de memória."
+  },
+  "30-B": {
+    id: "30-B", parentId: 30, type: "fill", topic: "Arquivos & OOP", xp: 5,
+    title: "Sub-fase 30-B: Gerenciamento com with",
+    question: "Use o bloco with para abrir o arquivo de runas no modo leitura e guardá-lo como 'f':",
+    code: "___ open(\"runas.txt\", \"r\") as f:\n    runas = f.read()",
+    answer: "with",
+    hint: "Insira a palavra-chave de criação do bloco de gerenciamento de contexto."
   }
 };
-
-
-
-
 
 export function getSubQuestion(levelId, subId) {
   const customKey = `${levelId}-${subId}`;
