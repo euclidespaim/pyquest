@@ -1,5 +1,100 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { runSimulatedPython, evaluatePythonLocally } from "../utils/interpreter";
+
+function highlightPython(code) {
+  if (!code) return "";
+  
+  // Escape HTML entities
+  let html = code
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  const comments = [];
+  const strings = [];
+
+  // 1. Hide comments
+  html = html.replace(/#[^\n]*/g, (match) => {
+    comments.push(match);
+    return `__PY_COMMENT_${comments.length - 1}__`;
+  });
+
+  // 2. Hide strings
+  html = html.replace(/(["'])(?:(?!\1|\\).|\\.)*\1/g, (match) => {
+    strings.push(match);
+    return `__PY_STRING_${strings.length - 1}__`;
+  });
+
+  // 3. Keywords
+  const keywords = [
+    "class", "def", "self", "if", "elif", "else", "while", "for", "in", 
+    "try", "except", "with", "open", "as", "return", "print", "len", "range", 
+    "True", "False", "None"
+  ];
+  const keywordRegex = new RegExp(`\\b(${keywords.join("|")})\\b`, "g");
+  html = html.replace(keywordRegex, '<span style="color: #ff7b72; font-weight: bold;">$1</span>');
+
+  // 4. Numbers
+  html = html.replace(/\b(\d+)(?:\.\d+)?\b/g, '<span style="color: #79c0ff;">$1</span>');
+
+  // 5. Functions/Methods
+  html = html.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)(?=\s*\()/g, '<span style="color: #d2a8ff;">$1</span>');
+
+  // Restore strings
+  html = html.replace(/__PY_STRING_(\d+)__/g, (match, idx) => {
+    return `<span style="color: #a5d6ff;">${strings[Number(idx)]}</span>`;
+  });
+
+  // Restore comments
+  html = html.replace(/__PY_COMMENT_(\d+)__/g, (match, idx) => {
+    return `<span style="color: #8b949e; font-style: italic;">${comments[Number(idx)]}</span>`;
+  });
+
+  return html;
+}
+
+const animationStyle = `
+  @keyframes floatUpFade {
+    0% {
+      transform: translate(-50%, -50%) translateY(0) scale(0.8);
+      opacity: 0;
+    }
+    20% {
+      transform: translate(-50%, -50%) translateY(-20px) scale(1.2);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) translateY(-100px) scale(1);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slashAnim {
+    0% {
+      width: 0%;
+      opacity: 0;
+    }
+    35% {
+      width: 100%;
+      opacity: 1;
+    }
+    100% {
+      width: 100%;
+      opacity: 0;
+      transform: translateY(30px) rotate(-12deg);
+    }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translateX(6px); }
+  }
+  
+  .editor-shake {
+    animation: shake 0.4s ease-in-out;
+  }
+`;
 
 export default function LevelView({
   activeLevel,
@@ -31,6 +126,14 @@ export default function LevelView({
   const [feedback, setFeedback] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
+  // Upgrades: Visual & Audio feedback states
+  const [showFloatingXp, setShowFloatingXp] = useState(false);
+  const [showSlash, setShowSlash] = useState(false);
+  const [screenShake, setScreenShake] = useState(false);
+
+  // Editor overlay ref
+  const preRef = useRef(null);
+
   // Reset inputs when active level changes
   useEffect(() => {
     setSelectedQuizOption(null);
@@ -43,7 +146,17 @@ export default function LevelView({
     setPhase("question");
     setShowConfetti(false);
     setShowHint(false);
+    setShowFloatingXp(false);
+    setShowSlash(false);
+    setScreenShake(false);
   }, [activeLevel]);
+
+  const handleScroll = (e) => {
+    if (preRef.current) {
+      preRef.current.scrollTop = e.target.scrollTop;
+      preRef.current.scrollLeft = e.target.scrollLeft;
+    }
+  };
 
   // Actions
   function handleRunSimulate() {
@@ -81,6 +194,10 @@ export default function LevelView({
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2000);
       
+      // Floating XP upgrade
+      setShowFloatingXp(true);
+      setTimeout(() => setShowFloatingXp(false), 2000);
+      
       setFeedback({ 
         correct: true, 
         gained: gainedXp, 
@@ -91,6 +208,11 @@ export default function LevelView({
       onUpdateProgress(activeLevel.id, true, gainedXp);
     } else {
       playSound("error");
+      
+      // Shake upgrade
+      setScreenShake(true);
+      setTimeout(() => setScreenShake(false), 400);
+
       setFeedback({ correct: false, gained: 0, explanation: exp });
       onUpdateProgress(activeLevel.id, false, 0);
     }
@@ -109,6 +231,12 @@ export default function LevelView({
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2000);
       
+      // Floating XP & Sword slash upgrades
+      setShowFloatingXp(true);
+      setTimeout(() => setShowFloatingXp(false), 2000);
+      setShowSlash(true);
+      setTimeout(() => setShowSlash(false), 800);
+      
       setFeedback({ 
         correct: true, 
         gained: gainedXp, 
@@ -120,6 +248,11 @@ export default function LevelView({
       onUpdateProgress(activeLevel.id, true, gainedXp);
     } else {
       playSound("error");
+      
+      // Shake upgrade
+      setScreenShake(true);
+      setTimeout(() => setScreenShake(false), 400);
+
       setFeedback({ 
         correct: false, 
         gained: 0, 
@@ -204,7 +337,7 @@ export default function LevelView({
       {showConfetti && <Confetti piecesCount={35} />}
 
       {/* COLUNA ESQUERDA: TEORIA E EXEMPLO */}
-      <section style={{ ...styles.splitPanel, background: activeTheme.theoryBg, borderRight: `1px solid ${activeTheme.divider}`, color: activeTheme.text }}>
+      <section className="level-view-panel level-view-panel-theory" style={{ ...styles.splitPanel, background: activeTheme.theoryBg, borderRight: `1px solid ${activeTheme.divider}`, color: activeTheme.text }}>
         <button style={{ ...styles.backBtn, color: activeTheme.primary }} onClick={() => { playSound("click"); onBackToRoadmap(); }}>
           ← Voltar ao Mapa
         </button>
@@ -273,7 +406,45 @@ export default function LevelView({
       </section>
 
       {/* COLUNA DIREITA: QUESTÃO, TERMINAL OU QUIZ */}
-      <section style={{ ...styles.splitPanel, background: activeTheme.bg, color: activeTheme.text }}>
+      <section 
+        className={`level-view-panel level-view-panel-ide ${screenShake ? "editor-shake" : ""}`}
+        style={{ ...styles.splitPanel, background: activeTheme.bg, color: activeTheme.text, position: "relative" }}
+      >
+        <style dangerouslySetInnerHTML={{ __html: animationStyle }} />
+
+        {showFloatingXp && (
+          <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: "48px",
+            fontWeight: "900",
+            color: "#eab308", // Golden yellow
+            textShadow: "0 0 20px rgba(234, 179, 8, 0.6), 0 0 2px #000",
+            pointerEvents: "none",
+            animation: "floatUpFade 1.8s ease-out forwards",
+            zIndex: 9999
+          }}>
+            +{feedback ? feedback.gained : activeLevel.xp} XP
+          </div>
+        )}
+
+        {showSlash && (
+          <div style={{
+            position: "absolute",
+            top: "40%",
+            left: "0",
+            width: "100%",
+            height: "10px",
+            background: "linear-gradient(90deg, transparent, #fff 50%, transparent)",
+            transform: "rotate(-12deg)",
+            boxShadow: "0 0 25px #79c0ff, 0 0 12px #fff",
+            animation: "slashAnim 0.7s ease-out forwards",
+            zIndex: 100,
+            pointerEvents: "none"
+          }} />
+        )}
         
         {phase === "question" ? (
           <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "space-between" }}>
@@ -332,10 +503,10 @@ export default function LevelView({
 
                   <div style={styles.codeIDEContainer}>
                     <div style={styles.codeIDETab}>desafio.py</div>
-                    <div style={{ ...styles.codeIDEBlock, padding: "20px 24px", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                    <div style={{ ...styles.codeIDEBlock, padding: "20px 24px", display: "flex", alignItems: "center", flexWrap: "nowrap", gap: 0, overflowX: "auto" }}>
                       {activeLevel.code.split("___").map((snippet, sIdx, arr) => (
-                        <span key={sIdx} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <span style={{ fontFamily: "monospace", fontSize: 17, color: "#d4d4d4" }}>{snippet}</span>
+                        <span key={sIdx} style={{ display: "flex", alignItems: "center", gap: 0 }}>
+                          <span style={{ fontFamily: "monospace", fontSize: 17, color: "#d4d4d4", whiteSpace: "pre" }}>{snippet}</span>
                           {sIdx < arr.length - 1 && (
                             <input
                               className="code-input-blank"
@@ -394,18 +565,30 @@ export default function LevelView({
                       <span>programa.py</span>
                       <span style={{ fontSize: 11, color: activeTheme.pythonGreen }}>● Editando</span>
                     </div>
-                    <textarea
-                      spellCheck={false}
-                      rows={10}
-                      value={challengeCode}
-                      onChange={e => setChallengeCode(e.target.value)}
-                      style={{
-                        ...styles.codeEditorArea,
-                        background: activeTheme.terminalBg,
-                        color: "#d4d4d4",
-                        borderColor: activeTheme.cardBorder
-                      }}
-                    />
+                    <div style={{
+                      ...styles.codeEditorWrapper,
+                      background: activeTheme.terminalBg,
+                      borderColor: activeTheme.cardBorder
+                    }}>
+                      <pre
+                        ref={preRef}
+                        style={{
+                          ...styles.codeHighlightOverlay,
+                          color: "#d4d4d4"
+                        }}
+                        dangerouslySetInnerHTML={{ __html: highlightPython(challengeCode) }}
+                      />
+                      <textarea
+                        spellCheck={false}
+                        value={challengeCode}
+                        onChange={e => setChallengeCode(e.target.value)}
+                        onScroll={handleScroll}
+                        style={{
+                          ...styles.codeEditorTextarea,
+                          caretColor: activeTheme.text
+                        }}
+                      />
+                    </div>
                   </div>
 
                   {/* Helper Keyboard */}
@@ -753,19 +936,58 @@ const styles = {
     marginTop: 18,
     lineHeight: 1.5,
   },
-  codeEditorArea: {
+  codeEditorWrapper: {
+    position: "relative",
     width: "100%",
-    padding: "16px",
-    fontSize: 14,
-    fontFamily: "monospace",
-    lineHeight: 1.6,
+    height: "220px",
+    boxSizing: "border-box",
     borderBottomLeftRadius: "12px",
     borderBottomRightRadius: "12px",
     borderWidth: "0 1px 1px 1px",
     borderStyle: "solid",
-    outline: "none",
-    resize: "vertical",
+    overflow: "hidden",
+  },
+  codeHighlightOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    margin: 0,
+    padding: "16px",
+    fontSize: "14px",
+    fontFamily: "monospace",
+    lineHeight: "1.6",
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word",
     boxSizing: "border-box",
+    pointerEvents: "none",
+    background: "transparent",
+    overflow: "hidden",
+    border: "none",
+    textAlign: "left",
+  },
+  codeEditorTextarea: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    margin: 0,
+    padding: "16px",
+    fontSize: "14px",
+    fontFamily: "monospace",
+    lineHeight: "1.6",
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word",
+    boxSizing: "border-box",
+    background: "transparent",
+    color: "transparent",
+    border: "none",
+    outline: "none",
+    resize: "none",
+    overflowY: "auto",
+    overflowX: "hidden",
   },
   helperKeyboard: {
     display: "flex",

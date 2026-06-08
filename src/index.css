@@ -1,3 +1,7 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,69 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Global mobile layout overrides to prevent horizontal overflow/scroll */
+html, body, #root {
+  max-width: 100vw;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Responsive adjustments for header */
+.header-container {
+  padding-top: calc(12px + env(safe-area-inset-top, 0px)) !important;
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding-top: calc(8px + env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: 8px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    gap: 8px !important;
+  }
+  .header-player-progress {
+    display: none !important; /* Hide progress bar on mobile */
+  }
+  .header-rank-name {
+    display: none !important; /* Hide rank name text, keep only icon */
+  }
+  .header-actions-container {
+    gap: 8px !important;
+  }
+  .header-modules-btn-text {
+    display: none !important; /* Hide text 'Módulos', keep only emoji */
+  }
+  .header-player-name {
+    font-size: 13px !important;
+  }
+  .header-xp-text {
+    font-size: 11px !important;
+  }
+}
+
+/* Responsive adjustments for LevelView panels */
+@media (max-width: 768px) {
+  .level-view-panel {
+    padding: 16px 16px 30px !important;
+    min-width: 100% !important;
+    max-height: none !important; /* Allow natural scrolling instead of viewport locking on mobile */
+    overflow-y: visible !important;
+  }
+  
+  /* Remove right border of left panel on mobile when stacked vertically */
+  .level-view-panel-theory {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Responsive adjustments for ModuleSelector cards */
+@media (max-width: 768px) {
+  .module-card {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
 }

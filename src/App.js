@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { QUESTIONS, MODULES, BADGES, getRank, getSubQuestion } from "./data/questions";
-import { playSound } from "./utils/audio";
+import { playSound, startBackgroundMusic, stopBackgroundMusic } from "./utils/audio";
 
 // Component imports
 import Header from "./components/Header";
@@ -43,11 +43,37 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showBadgesPanel, setShowBadgesPanel] = useState(false);
   const [devMode, setDevMode] = useState(() => localStorage.getItem("pyquest_dev_mode") === "true");
+  const [bgMusicEnabled, setBgMusicEnabled] = useState(() => localStorage.getItem("pyquest_bg_music") === "true");
+  const [loadingSplash, setLoadingSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadingSplash(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Sync state with localStorage
   useEffect(() => {
     localStorage.setItem("pyquest_theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem("pyquest_bg_music", bgMusicEnabled ? "true" : "false");
+  }, [bgMusicEnabled]);
+
+  useEffect(() => {
+    const startOnInteraction = () => {
+      if (localStorage.getItem("pyquest_bg_music") === "true") {
+        startBackgroundMusic();
+      }
+      document.removeEventListener("click", startOnInteraction);
+    };
+    document.addEventListener("click", startOnInteraction);
+    return () => {
+      document.removeEventListener("click", startOnInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("pyquest_dev_mode", devMode);
@@ -214,6 +240,43 @@ export default function App() {
   const maxPossibleXP = QUESTIONS.reduce((sum, q) => sum + q.xp, 0);
   const xpPercentage = Math.min(100, Math.round((xp / maxPossibleXP) * 100));
 
+  if (loadingSplash) {
+    return (
+      <div style={{ ...styles.root, background: activeTheme.bg, color: activeTheme.text, display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <style>{`
+          @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+          }
+          .float-avatar {
+            animation: float 3s infinite ease-in-out;
+          }
+        `}</style>
+        <div className="float-avatar" style={{ textAlign: "center" }}>
+          <img 
+            src={`${process.env.PUBLIC_URL}/logo512.png`} 
+            alt="PyQuest Logo" 
+            style={{ 
+              width: 200, 
+              height: 200, 
+              borderRadius: "36px", 
+              boxShadow: `0 12px 32px ${activeTheme.primaryGlow}, 0 4px 12px rgba(0,0,0,0.25)`,
+              border: `3px solid ${activeTheme.pythonGreen}`
+            }} 
+          />
+          <h1 style={{ 
+            color: activeTheme.pythonGreen, 
+            fontSize: 32, 
+            fontWeight: 900, 
+            marginTop: 18, 
+            letterSpacing: -1 
+          }}>PyQuest 2.0</h1>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ ...styles.root, background: activeTheme.bg, color: activeTheme.text }}>
       <style>{`
@@ -338,6 +401,15 @@ export default function App() {
           setAiApiKey={setAiApiKey}
           devMode={devMode}
           onToggleDevMode={setDevMode}
+          bgMusicEnabled={bgMusicEnabled}
+          onToggleBgMusic={(enabled) => {
+            setBgMusicEnabled(enabled);
+            if (enabled) {
+              startBackgroundMusic();
+            } else {
+              stopBackgroundMusic();
+            }
+          }}
           handleReset={handleReset}
           onClose={() => setShowSettings(false)}
           playSound={playSound}

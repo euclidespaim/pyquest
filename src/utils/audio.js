@@ -3,6 +3,11 @@
  * @param {string} type - Tipo de som: 'success', 'error', 'click'
  */
 export function playSound(type) {
+  // Auto-start background music on first user interaction if enabled
+  if (localStorage.getItem("pyquest_bg_music") === "true") {
+    startBackgroundMusic();
+  }
+
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     const osc = ctx.createOscillator();
@@ -43,4 +48,78 @@ export function playSound(type) {
   } catch (e) {
     console.log("Web Audio blocked or not supported yet: ", e);
   }
+}
+
+// Retro RPG Chiptune Synthesizer
+let bgMusicCtx = null;
+let bgMusicInterval = null;
+let bgMusicPlaying = false;
+
+export function startBackgroundMusic() {
+  if (bgMusicPlaying) return;
+  try {
+    bgMusicCtx = new (window.AudioContext || window.webkitAudioContext)();
+    bgMusicPlaying = true;
+
+    // Classic medieval minor arpeggio chord progression loop (A minor, D minor, G major, C major)
+    const melody = [
+      440, 480, 523, 587, 659, 587, 523, 480, // Am
+      294, 330, 349, 392, 440, 392, 349, 330, // Dm
+      392, 440, 494, 523, 587, 523, 494, 440, // G
+      262, 294, 330, 349, 392, 349, 330, 294  // C
+    ];
+    let step = 0;
+
+    bgMusicInterval = setInterval(() => {
+      if (!bgMusicPlaying) return;
+      if (bgMusicCtx.state === "suspended") {
+        bgMusicCtx.resume();
+      }
+      playMelodyNote(melody[step], 0.22);
+      step = (step + 1) % melody.length;
+    }, 200); // 120 bpm (8th notes)
+  } catch (e) {
+    console.log("Failed to start background music: ", e);
+  }
+}
+
+function playMelodyNote(frequency, duration) {
+  if (!bgMusicCtx || bgMusicCtx.state === "closed") return;
+  try {
+    const osc = bgMusicCtx.createOscillator();
+    const gain = bgMusicCtx.createGain();
+    osc.connect(gain);
+    gain.connect(bgMusicCtx.destination);
+
+    // Soft triangle wave for a cozy retro RPG mood
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(frequency, bgMusicCtx.currentTime);
+
+    // Keep it extremely quiet as background music
+    gain.gain.setValueAtTime(0.015, bgMusicCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, bgMusicCtx.currentTime + duration);
+
+    osc.start();
+    osc.stop(bgMusicCtx.currentTime + duration);
+  } catch (e) {
+    // Ignore closed context warnings
+  }
+}
+
+export function stopBackgroundMusic() {
+  bgMusicPlaying = false;
+  if (bgMusicInterval) {
+    clearInterval(bgMusicInterval);
+    bgMusicInterval = null;
+  }
+  if (bgMusicCtx) {
+    try {
+      bgMusicCtx.close();
+    } catch (e) {}
+    bgMusicCtx = null;
+  }
+}
+
+export function isBackgroundMusicPlaying() {
+  return bgMusicPlaying;
 }

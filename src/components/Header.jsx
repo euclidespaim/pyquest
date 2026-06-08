@@ -16,38 +16,46 @@ export default function Header({
   playSound
 }) {
   return (
-    <header style={{ ...styles.header, background: activeTheme.headerBg, borderColor: activeTheme.divider, color: activeTheme.text }}>
+    <header className="header-container" style={{ ...styles.header, background: activeTheme.headerBg, borderColor: activeTheme.divider, color: activeTheme.text }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <span 
-          style={{ fontSize: 28, cursor: "pointer" }} 
+        <img 
+          src={`${process.env.PUBLIC_URL}/logo192.png`} 
+          alt="PyQuest Logo" 
           onClick={() => { playSound("click"); onNavigateModules(); }}
+          style={{ 
+            width: 32, 
+            height: 32, 
+            borderRadius: "8px", 
+            cursor: "pointer",
+            border: `1.5px solid ${activeTheme.pythonGreen}`,
+            boxShadow: `0 0 8px ${activeTheme.primaryGlow}`
+          }} 
           title="Ver Módulos"
-        >
-          🐍
-        </span>
+        />
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={styles.playerName}>{playerName}</span>
+            <span className="header-player-name" style={styles.playerName}>{playerName}</span>
             <span style={{ ...styles.rankBadge, background: activeTheme.primaryGlow, color: activeTheme.primary }}>
-              {rank.icon} {rank.name}
+              {rank.icon} <span className="header-rank-name">{rank.name}</span>
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
-            <div style={{ ...styles.progressBar, background: activeTheme.divider }}>
+            <div className="header-player-progress" style={{ ...styles.progressBar, background: activeTheme.divider }}>
               <div style={{ ...styles.progressFill, background: activeTheme.pythonGreen, width: `${xpPercentage}%` }} />
             </div>
-            <span style={{ fontSize: 12, fontWeight: 700, color: activeTheme.pythonGreen }}>{xp} XP</span>
+            <span className="header-xp-text" style={{ fontSize: 12, fontWeight: 700, color: activeTheme.pythonGreen }}>{xp} XP</span>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div className="header-actions-container" style={{ display: "flex", alignItems: "center", gap: 14 }}>
         {/* Module Selector Button */}
         <button 
-          style={{ ...styles.textBtn, color: activeTheme.primary }} 
+          style={{ ...styles.iconBtn, color: activeTheme.primary }} 
           onClick={() => { playSound("click"); onNavigateModules(); }}
+          title="Módulos"
         >
-          🗂️ Módulos
+          🏠
         </button>
 
         {streak >= 2 && (
@@ -57,7 +65,8 @@ export default function Header({
             borderColor: "#f59e0b", 
             color: "#f59e0b" 
           }}>
-            🔥 {streak}
+            <span style={{ fontSize: 14, display: "inline-block", lineHeight: "1" }}>🔥</span>
+            <span style={{ fontSize: 13, fontWeight: 800, display: "inline-block", lineHeight: "1" }}>{streak}</span>
           </div>
         )}
         
@@ -123,11 +132,15 @@ const styles = {
     transition: "width .4s ease-out",
   },
   streakBadge: {
-    fontSize: 13,
-    fontWeight: 800,
-    padding: "3px 10px",
-    borderRadius: "12px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+    padding: "0 10px",
+    height: 30,
+    borderRadius: "15px",
     border: "1px solid",
+    boxSizing: "border-box",
   },
   iconBtn: {
     background: "none",

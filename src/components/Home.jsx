@@ -4,7 +4,19 @@ export default function Home({ activeTheme, nameInput, setNameInput, handleStart
   return (
     <main style={styles.homeScreen}>
       <div style={{ ...styles.homeCard, background: activeTheme.cardBg, borderColor: activeTheme.cardBorder, color: activeTheme.text }}>
-        <div className="float-avatar" style={{ fontSize: 72, marginBottom: 12 }}>🐍</div>
+        <div className="float-avatar" style={{ marginBottom: 20, display: "flex", justifyContent: "center" }}>
+          <img 
+            src={`${process.env.PUBLIC_URL}/logo512.png`} 
+            alt="PyQuest Logo" 
+            style={{ 
+              width: 220, 
+              height: 220, 
+              borderRadius: "36px", 
+              boxShadow: `0 12px 28px ${activeTheme.primaryGlow}, 0 4px 10px rgba(0,0,0,0.15)`,
+              border: `3px solid ${activeTheme.pythonGreen}`
+            }} 
+          />
+        </div>
         <h1 style={{ ...styles.title, color: activeTheme.pythonGreen }}>PyQuest 2.0</h1>
         <p style={{ ...styles.subtitle, color: activeTheme.textMuted }}>Aprenda Python do zero em uma aventura gamificada!</p>
         

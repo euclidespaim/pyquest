@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SettingsModal({ activeTheme, aiApiKey, setAiApiKey, devMode, onToggleDevMode, handleReset, onClose, playSound }) {
+export default function SettingsModal({ activeTheme, aiApiKey, setAiApiKey, devMode, onToggleDevMode, bgMusicEnabled, onToggleBgMusic, handleReset, onClose, playSound }) {
   return (
     <div style={styles.modalOverlay} onClick={onClose}>
       <div 
@@ -48,6 +48,29 @@ export default function SettingsModal({ activeTheme, aiApiKey, setAiApiKey, devM
                 onChange={e => {
                   playSound("click");
                   onToggleDevMode(e.target.checked);
+                }}
+                style={styles.checkbox}
+              />
+            </div>
+          </div>
+
+          <div style={{ ...styles.divider, background: activeTheme.divider }} />
+
+          {/* Background Music Toggle */}
+          <div style={styles.settingsSection}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ flex: 1, paddingRight: 12 }}>
+                <h4 style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 800 }}>Música de Fundo 🎵</h4>
+                <p style={{ margin: 0, fontSize: 12, color: activeTheme.textMuted }}>
+                  Trilha sonora retro 8-bits instrumental para a sua aventura de programação.
+                </p>
+              </div>
+              <input
+                type="checkbox"
+                checked={bgMusicEnabled}
+                onChange={e => {
+                  playSound("click");
+                  onToggleBgMusic(e.target.checked);
                 }}
                 style={styles.checkbox}
               />

@@ -383,20 +383,23 @@ export const MODULES = [
 ];
 
 export const BADGES = [
-  { id: "primeiros_passos", name: "Primeiros Passos", icon: "🐣", desc: "Completou o nível 1 e deu partida na jornada!", criteria: (comp) => comp["1"] === "correct" },
+  { id: "primeiros_passos", name: "Passo Silly Walk", icon: "👞", desc: "Deu os primeiros passos na jornada! (Inspirado no Ministério dos Passos Bobos)", criteria: (comp) => comp["1"] === "correct" },
   { id: "var_expert", name: "Mestre das Caixas", icon: "📦", desc: "Completou todos os 7 primeiros níveis sobre Variáveis e Tipos.", criteria: (comp) => Array.from({ length: 7 }, (_, i) => i + 1).every(id => comp[id] === "correct") },
-  { id: "decision_maker", name: "Tomador de Decisão", icon: "⚖️", desc: "Completou os primeiros desafios de condicionais (Nível 8, 9 e 10).", criteria: (comp) => ["8", "9", "10"].every(id => comp[id] === "correct") },
-  { id: "streak_3", name: "Fogo no Cérebro", icon: "🔥", desc: "Acertou 3 ou mais questões seguidas!", criteria: (_, streak) => streak >= 3 },
-  { id: "pythonista_supremo", name: "Mestre da Febre", icon: "🐍", desc: "Venceu o desafio final da Balança da Febre (Nível 15).", criteria: (comp) => comp["15"] === "correct" },
-  { id: "loop_master", name: "Mestre dos Ciclos", icon: "🌀", desc: "Completou as fases de repetição (Níveis 18 e 19).", criteria: (comp) => ["18", "19"].every(id => comp[id] === "correct") },
+  { id: "decision_maker", name: "Cavaleiro de Ni!", icon: "🌲", desc: "Tomou as primeiras decisões lógicas e condicionais no código. Ni!", criteria: (comp) => ["8", "9", "10"].every(id => comp[id] === "correct") },
+  { id: "streak_3", name: "Não Morri Ainda!", icon: "🧟", desc: "Acertou 3 ou mais questões seguidas sem errar! (Inspirado no Cavaleiro Negro)", criteria: (_, streak) => streak >= 3 },
+  { id: "pythonista_supremo", name: "Cálice Sagrado", icon: "🏆", desc: "Venceu o desafio final da Balança da Febre (Nível 15) e encontrou o Cálice.", criteria: (comp) => comp["15"] === "correct" },
+  { id: "loop_master", name: "Spam, Spam, Spam!", icon: "🥫", desc: "Dominou a arte de repetir instruções com loops. Spam!", criteria: (comp) => ["18", "19"].every(id => comp[id] === "correct") },
   { id: "ninja_calculator", name: "Calculista Lendário", icon: "🧮", desc: "Venceu o desafio final do Módulo 2 (Nível 22).", criteria: (comp) => comp["22"] === "correct" },
-  { id: "oop_master", name: "Arquiteto de Classes", icon: "🏛️", desc: "Instanciou o seu primeiro objeto guerreiro da classe Heroi no Nível 26.", criteria: (comp) => comp["26"] === "correct" },
-  { id: "npc_creator", name: "Criador de Mundos", icon: "💾", desc: "Criou e salvou o Gimli no VFS local concluindo o Nível 30.", criteria: (comp) => comp["30"] === "correct" }
+  { id: "oop_master", name: "Granada de Antioquia", icon: "💣", desc: "Instanciou o seu primeiro objeto guerreiro da classe Heroi no Nível 26 para combater o Coelho Assassino!", criteria: (comp) => comp["26"] === "correct" },
+  { id: "npc_creator", name: "Inquisição Pythônica", icon: "🕵️‍♂️", desc: "Criou e salvou o Gimli no VFS local tratando erros. Ninguém esperava a Inquisição Pythônica!", criteria: (comp) => comp["30"] === "correct" },
+  { id: "black_knight", name: "Cavaleiro Negro", icon: "⚔️", desc: "Nenhum erro passará! Completou todos os desafios de comparação e condicionais aninhadas (Níveis 11 ao 14).", criteria: (comp) => ["11", "12", "13", "14"].every(id => comp[id] === "correct") },
+  { id: "shrubbery", name: "O Arbusto Sagrado", icon: "🌳", desc: "Traga-nos um arbusto! Completou as fases de Listas e Coleções (Níveis 16 e 17).", criteria: (comp) => ["16", "17"].every(id => comp[id] === "correct") },
+  { id: "dead_parrot", name: "Pássaro da Noruega", icon: "🐦", desc: "Não está morto, está apenas descansando! Capturou erros no código usando try/except (Nível 27).", criteria: (comp) => comp["27"] === "correct" }
 ];
 
 export const RANKS = [
   { name: "Recruta Pythonista", min: 0, icon: "🐣" },
-  { name: "Aprendiz de Variáveis", min: 50, icon: "📗" },
+  { name: "Aprendiz de Variáveis", min: 50, icon: "📖" },
   { name: "Desenvolvedor Jr", min: 120, icon: "💻" },
   { name: "Pythonista de Elite", min: 200, icon: "🐍" },
   { name: "Mestre das Condições", min: 280, icon: "⚡" },

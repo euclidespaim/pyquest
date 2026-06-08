@@ -16,6 +16,7 @@ export function runSimulatedPython(code) {
   };
   const stdout = [];
   const errors = [];
+  let currentLineNum = null;
 
   function evaluateExpression(expr, localScope, depth = 0) {
     expr = expr.trim();
@@ -88,7 +89,7 @@ export function runSimulatedPython(code) {
         const left = evaluateExpression(expr.slice(0, idx), localScope, depth);
         const right = evaluateExpression(expr.slice(idx + 1), localScope, depth);
         if (Number(right) === 0) {
-          errors.push("ZeroDivisionError: division by zero");
+          errors.push(`ZeroDivisionError (Linha ${currentLineNum || "?"}): division by zero`);
           return 0;
         }
         return Number(left) / Number(right);
@@ -217,7 +218,7 @@ export function runSimulatedPython(code) {
         const args = rawArgs.map(a => evaluateExpression(a, localScope, depth));
         if (targetObj.__isFile__) {
           if (targetObj.closed) {
-            errors.push(`Erro: Operação em arquivo fechado '${targetObj.filename}'.`);
+            errors.push(`Erro (Linha ${currentLineNum || "?"}): Operação em arquivo fechado '${targetObj.filename}'.`);
             return "";
           }
           if (methodName === "read") {
@@ -327,7 +328,7 @@ export function runSimulatedPython(code) {
 
   function runInterpreter(subLines, subScope, depth = 0) {
     if (depth > 12) {
-      errors.push("Erro: Limite de recursão excedido (stack overflow simulado).");
+      errors.push(`Erro (Linha ${currentLineNum || "?"}): Limite de recursão excedido (stack overflow simulado).`);
       return;
     }
 
@@ -339,6 +340,7 @@ export function runSimulatedPython(code) {
       }
 
       const lineObj = subLines[i];
+      currentLineNum = lineObj.lineNum;
       const line = lineObj.text;
       const indent = lineObj.indent;
 
@@ -580,7 +582,7 @@ export function runSimulatedPython(code) {
           if (Array.isArray(val)) {
             sequence = val;
           } else {
-            errors.push(`Erro: '${seqExpr}' não é uma lista ou sequência iterável.`);
+            errors.push(`Erro (Linha ${currentLineNum || "?"}): '${seqExpr}' não é uma lista ou sequência iterável.`);
             continue;
           }
         }
@@ -690,7 +692,7 @@ export function runSimulatedPython(code) {
             }
           } else if (targetObj.__isFile__) {
             if (targetObj.closed) {
-              errors.push(`Erro: Operação em arquivo fechado '${targetObj.filename}'.`);
+              errors.push(`Erro (Linha ${currentLineNum || "?"}): Operação em arquivo fechado '${targetObj.filename}'.`);
               continue;
             }
             if (methodName === "write") {

@@ -52,6 +52,7 @@ export default function ModuleSelector({ MODULES, completed, activeTheme, onSele
           return (
             <div 
               key={module.id} 
+              className="module-card"
               style={{ 
                 ...styles.card, 
                 background: activeTheme.cardBg, 
