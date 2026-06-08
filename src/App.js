@@ -10,6 +10,7 @@ import Roadmap from "./components/Roadmap";
 import LevelView from "./components/LevelView";
 import BadgesModal from "./components/Modals/BadgesModal";
 import SettingsModal from "./components/Modals/SettingsModal";
+import CastleUnlockAnimation from "./components/CastleUnlockAnimation";
 
 export default function App() {
   // Persistence states
@@ -45,6 +46,17 @@ export default function App() {
   const [devMode, setDevMode] = useState(() => localStorage.getItem("pyquest_dev_mode") === "true");
   const [bgMusicEnabled, setBgMusicEnabled] = useState(() => localStorage.getItem("pyquest_bg_music") === "true");
   const [loadingSplash, setLoadingSplash] = useState(true);
+
+  // Castle unlock animations states
+  const [activeUnlockedAnimation, setActiveUnlockedAnimation] = useState(null);
+  const [completedAnimations, setCompletedAnimations] = useState(() => {
+    try {
+      const saved = localStorage.getItem("pyquest_completed_animations");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -121,6 +133,43 @@ export default function App() {
       }
     }
   }, [completed, streak, screen, unlockedBadges]);
+
+  // Module completion/castle door unlock trigger
+  useEffect(() => {
+    if (screen !== "home" && completed) {
+      // Module 1 check (questions 1 to 15)
+      const m1Questions = QUESTIONS.filter(q => q.id <= 15);
+      const m1Finished = m1Questions.every(q => 
+        completed[q.id] === "correct" &&
+        completed[q.id + "-A"] === "correct" &&
+        completed[q.id + "-B"] === "correct"
+      );
+
+      // Module 2 check (questions 16 to 22)
+      const m2Questions = QUESTIONS.filter(q => q.id > 15 && q.id <= 22);
+      const m2Finished = m2Questions.every(q => 
+        completed[q.id] === "correct" &&
+        completed[q.id + "-A"] === "correct" &&
+        completed[q.id + "-B"] === "correct"
+      );
+
+      if (m1Finished && !completedAnimations.includes("m1")) {
+        setActiveUnlockedAnimation({ moduleId: "m1", nextModuleTitle: "Módulo 2: Coleções, Repetições & Funções" });
+        setCompletedAnimations(prev => {
+          const next = [...prev, "m1"];
+          localStorage.setItem("pyquest_completed_animations", JSON.stringify(next));
+          return next;
+        });
+      } else if (m2Finished && !completedAnimations.includes("m2")) {
+        setActiveUnlockedAnimation({ moduleId: "m2", nextModuleTitle: "Módulo 3: POO, Exceções & Arquivos" });
+        setCompletedAnimations(prev => {
+          const next = [...prev, "m2"];
+          localStorage.setItem("pyquest_completed_animations", JSON.stringify(next));
+          return next;
+        });
+      }
+    }
+  }, [completed, completedAnimations, screen]);
 
   const activeTheme = THEMES[theme];
 
@@ -412,6 +461,25 @@ export default function App() {
           }}
           handleReset={handleReset}
           onClose={() => setShowSettings(false)}
+          playSound={playSound}
+          onTestCastleAnimation={(mId) => {
+            setShowSettings(false);
+            setActiveUnlockedAnimation({
+              moduleId: mId,
+              nextModuleTitle: mId === "m1" 
+                ? "Módulo 2: Coleções, Repetições & Funções" 
+                : "Módulo 3: POO, Exceções & Arquivos"
+            });
+          }}
+        />
+      )}
+
+      {/* CASTLE UNLOCK TRANSITION OVERLAY */}
+      {activeUnlockedAnimation && (
+        <CastleUnlockAnimation
+          moduleId={activeUnlockedAnimation.moduleId}
+          nextModuleTitle={activeUnlockedAnimation.nextModuleTitle}
+          onClose={() => setActiveUnlockedAnimation(null)}
           playSound={playSound}
         />
       )}

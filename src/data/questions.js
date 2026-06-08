@@ -94,11 +94,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 15,
     theory: "Na programação, tomamos decisões usando o comando **`if`** (que significa \"se\" em inglês).\n\nEle verifica uma condição. Se for verdadeira, executa o bloco de código logo abaixo.\n\n**Sintaxe importante:**\n1. Usamos dois pontos `:` no final da linha do `if`.\n2. O código de dentro do `if` deve ter um recuo de **4 espaços** (chamado de **indentação**). O Python usa esse espaço para saber o que está dentro do bloco.\n\n```python\nif idade >= 18:\n    print(\"Maior de idade\")\n```",
-    question: "Você encontrou o portão da guilda dos aventureiros. Para destrancá-lo, o jogador deve ter idade igual ou superior a 16 anos. Preencha a estrutura de teste condicional.",
-    code: "___ idade >= 16:\n    print(\"Pode votar\")",
-    answer: "if",
-    placeholder: "Estrutura de decisão",
-    hint: "Insira a palavra-chave de desvio condicional básico em inglês (duas letras minúsculas) para iniciar o bloco de teste."
+    question: "Você encontrou o portão da guilda dos aventureiros. Para destrancá-lo, o herói deve possuir idade igual ou superior a 16 anos. Complete com o comando de decisão e o operador de comparação adequado.",
+    code: "___ idade ___ 16:\n    print(\"Bem-vindo à Guilda!\")",
+    answer: ["if", ">="],
+    placeholder: "Comando e comparador",
+    hint: "Use o comando 'se' em inglês (duas letras) no primeiro espaço, e o símbolo de 'maior ou igual' no segundo espaço."
   },
   {
     id: 9,
@@ -118,12 +118,12 @@ export const QUESTIONS = [
     topic: "Condicionais",
     type: "fill",
     xp: 15,
-    theory: "O que fazemos quando a condição do `if` é falsa? Usamos o **`else`** (que significa \"caso contrário\").\n\nO bloco dentro do `else` roda **apenas** quando a condição do `if` falha (dá False).\n\n**Sintaxe:** O `else` **não** recebe uma indicaçao de teste e termina com dois pontos `:`.\n\n```python\nif nota >= 6.0:\n    print(\"Aprovado\")\nelse:\n    print(\"Reprovado\")\n```",
-    question: "Caso o estudante tire nota superior ou igual a 6, o sistema imprime 'Aprovado'. Do contrário, imprime 'Reprovado'. Adicione a cláusula para tratar o caso contrário.",
-    code: "if nota >= 6:\n    print(\"Aprovado\")\n___:\n    print(\"Reprovado\")",
+    theory: "O que fazemos quando a condição do `if` é falsa? Usamos o **`else`** (que significa \"caso contrário\").\n\nO bloco dentro do `else` roda **apenas** quando a condição do `if` falha (dá False).\n\n**Sintaxe:** O `else` **não** recebe uma indicação de teste e termina com dois pontos `:`.\n\n```python\nif mana >= 50:\n    print(\"Portal aberto\")\nelse:\n    print(\"Mana insuficiente\")\n```",
+    question: "Se o herói possuir 50 ou mais de mana, ele consegue abrir o portal de fuga. Caso contrário, exiba 'Mana insuficiente'. Adicione a cláusula para tratar o caso contrário.",
+    code: "if mana >= 50:\n    print(\"Portal aberto\")\n___:\n    print(\"Mana insuficiente\")",
     answer: "else",
     placeholder: "Caso contrário",
-    hint: "Palavra-chave associada ao 'if' que roda somente quando a condição inicial falha. Significa 'caso contrário' (quatro letras minúsculas em inglês)."
+    hint: "Palavra-chave em inglês (quatro letras minúsculas) que executa quando a condição do 'if' é falsa."
   },
   {
     id: 11,
@@ -218,11 +218,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 20,
     theory: "Estruturas de repetição executam um bloco de código repetidas vezes.\n\nO laço **`while`** (enquanto) repete o código **enquanto** uma condição for verdadeira. Em um combate, podemos atacar o inimigo enquanto a vida dele for maior que 0!\n\n**Exemplo:**\n```python\nhp_inimigo = 30\nwhile hp_inimigo > 0:\n    print(\"Golpe!\")\n    hp_inimigo = hp_inimigo - 10\n```",
-    question: "Você deve atacar o goblin no campo de batalha de forma repetida enquanto o HP dele for maior que 0. Insira o laço condicional correto.",
-    code: "hp_goblin = 20\n___ hp_goblin > 0:\n    print(\"Atacar Goblin!\")\n    hp_goblin = hp_goblin - 10",
-    answer: "while",
-    placeholder: "Laço condicional",
-    hint: "Laço de repetição que executa um bloco 'enquanto' a condição for verdadeira (palavra em inglês com 5 letras)."
+    question: "Você deve atacar o goblin no campo de batalha de forma repetida enquanto o HP dele for maior que 0. Complete o laço e a comparação lógica.",
+    code: "hp_goblin = 20\n___ hp_goblin ___ 0:\n    print(\"Atacar Goblin!\")\n    hp_goblin = hp_goblin - 10",
+    answer: ["while", ">"],
+    placeholder: "Repetição e comparação",
+    hint: "Insira a palavra para 'enquanto' em inglês no primeiro espaço, e o sinal matemático de 'maior que' no segundo espaço."
   },
   {
     id: 19,
@@ -615,7 +615,7 @@ export const SUB_QUESTIONS = {
     id: "11-B", parentId: 11, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 11-B: O Elevador de Níveis",
     question: "Se seu XP for menor que 100, exiba 'Bronze'. Caso contrário, se o XP for menor que 200, exiba 'Prata'. Complete a lacuna condicional intermediária.",
-    code: "if xp < 100:\n    print(\"Bronze\")\n___ xp < 200:\n    print(\"Prata\")",
+    code: "if xp < 100:\n    print(\"Bronze\")\n___ xp < 200:\n    print(\"Prata\")\nelse:\n    print(\"Ouro\")",
     answer: "elif",
     hint: "A palavra-chave é a contração de 'else if' que permite encadear múltiplos testes condicionais em sequência."
   },

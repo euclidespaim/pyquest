@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SettingsModal({ activeTheme, aiApiKey, setAiApiKey, devMode, onToggleDevMode, bgMusicEnabled, onToggleBgMusic, handleReset, onClose, playSound }) {
+export default function SettingsModal({ activeTheme, aiApiKey, setAiApiKey, devMode, onToggleDevMode, bgMusicEnabled, onToggleBgMusic, handleReset, onClose, playSound, onTestCastleAnimation }) {
   return (
     <div style={styles.modalOverlay} onClick={onClose}>
       <div 
@@ -55,6 +55,36 @@ export default function SettingsModal({ activeTheme, aiApiKey, setAiApiKey, devM
           </div>
 
           <div style={{ ...styles.divider, background: activeTheme.divider }} />
+
+          {/* Test Castle Animation (Dev mode helper) */}
+          {devMode && (
+            <>
+              <div style={styles.settingsSection}>
+                <h4 style={{ margin: "0 0 6px", fontSize: 14, fontWeight: 800 }}>Testar Animação do Castelo 🏰</h4>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button 
+                    style={{ flex: 1, padding: "8px 12px", border: "1px solid", borderRadius: 12, cursor: "pointer", background: "none", color: activeTheme.text, borderColor: activeTheme.divider }} 
+                    onClick={() => {
+                      playSound("click");
+                      onTestCastleAnimation("m1");
+                    }}
+                  >
+                    Módulo 1 (Sem Fogos)
+                  </button>
+                  <button 
+                    style={{ flex: 1, padding: "8px 12px", border: "1px solid", borderRadius: 12, cursor: "pointer", background: "none", color: activeTheme.text, borderColor: activeTheme.divider }} 
+                    onClick={() => {
+                      playSound("click");
+                      onTestCastleAnimation("m2");
+                    }}
+                  >
+                    Módulo 2 (Com Fogos)
+                  </button>
+                </div>
+              </div>
+              <div style={{ ...styles.divider, background: activeTheme.divider }} />
+            </>
+          )}
 
           {/* Background Music Toggle */}
           <div style={styles.settingsSection}>

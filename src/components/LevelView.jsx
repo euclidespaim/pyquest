@@ -35,7 +35,7 @@ function highlightPython(code) {
   html = html.replace(keywordRegex, '<span style="color: #ff7b72; font-weight: bold;">$1</span>');
 
   // 4. Numbers
-  html = html.replace(/\b(\d+)(?:\.\d+)?\b/g, '<span style="color: #79c0ff;">$1</span>');
+  html = html.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span style="color: #79c0ff;">$1</span>');
 
   // 5. Functions/Methods
   html = html.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)(?=\s*\()/g, '<span style="color: #d2a8ff;">$1</span>');
@@ -110,6 +110,7 @@ export default function LevelView({
   // Input/Solution States
   const [selectedQuizOption, setSelectedQuizOption] = useState(null);
   const [fillValue, setFillValue] = useState("");
+  const [fillValues, setFillValues] = useState([]);
   const [challengeCode, setChallengeCode] = useState(activeLevel.placeholder || "");
   const [showHint, setShowHint] = useState(false);
   
@@ -138,6 +139,8 @@ export default function LevelView({
   useEffect(() => {
     setSelectedQuizOption(null);
     setFillValue("");
+    const blankCount = (activeLevel.code || "").split("___").length - 1;
+    setFillValues(Array(blankCount).fill(""));
     setChallengeCode(activeLevel.placeholder || "");
     setTerminalOutputs([]);
     setTerminalError("");
@@ -150,6 +153,16 @@ export default function LevelView({
     setShowSlash(false);
     setScreenShake(false);
   }, [activeLevel]);
+
+  const isFillDisabled = () => {
+    if (activeLevel.type === "fill") {
+      if (Array.isArray(activeLevel.answer)) {
+        return activeLevel.answer.some((_, idx) => !(fillValues[idx] || "").trim());
+      }
+      return !fillValue.trim();
+    }
+    return false;
+  };
 
   const handleScroll = (e) => {
     if (preRef.current) {
@@ -181,12 +194,25 @@ export default function LevelView({
       isCorrect = selectedQuizOption === activeLevel.answer;
       exp = activeLevel.explanation;
     } else if (activeLevel.type === "fill") {
-      const cleanInput = fillValue.replace(/'|"/g, "").trim().toLowerCase();
-      const cleanAnswer = activeLevel.answer.replace(/'|"/g, "").trim().toLowerCase();
-      isCorrect = cleanInput === cleanAnswer;
-      exp = isCorrect 
-        ? `Correto! A resposta é exatamente: ${activeLevel.answer}`
-        : `Ah, a resposta correta era: ${activeLevel.answer}`;
+      if (Array.isArray(activeLevel.answer)) {
+        // Multi-blank question
+        isCorrect = activeLevel.answer.every((ans, index) => {
+          const val = fillValues[index] || "";
+          return val.replace(/'|"/g, "").trim().toLowerCase() === ans.replace(/'|"/g, "").trim().toLowerCase();
+        });
+        const ansLabel = activeLevel.answer.map(a => `"${a}"`).join(" e ");
+        exp = isCorrect 
+          ? `Correto! As respostas são: ${ansLabel}`
+          : `Ah, as respostas corretas eram: ${ansLabel}`;
+      } else {
+        // Single-blank question
+        const cleanInput = fillValue.replace(/'|"/g, "").trim().toLowerCase();
+        const cleanAnswer = activeLevel.answer.replace(/'|"/g, "").trim().toLowerCase();
+        isCorrect = cleanInput === cleanAnswer;
+        exp = isCorrect 
+          ? `Correto! A resposta é exatamente: ${activeLevel.answer}`
+          : `Ah, a resposta correta era: ${activeLevel.answer}`;
+      }
     }
 
     if (isCorrect) {
@@ -514,22 +540,68 @@ export default function LevelView({
 
                   <div style={styles.codeIDEContainer}>
                     <div style={styles.codeIDETab}>desafio.py</div>
-                    <div style={{ ...styles.codeIDEBlock, padding: "20px 24px", display: "flex", alignItems: "center", flexWrap: "nowrap", gap: 0, overflowX: "auto" }}>
-                      {activeLevel.code.split("___").map((snippet, sIdx, arr) => (
-                        <span key={sIdx} style={{ display: "flex", alignItems: "center", gap: 0 }}>
-                          <span style={{ fontFamily: "monospace", fontSize: 17, color: "#d4d4d4", whiteSpace: "pre" }}>{snippet}</span>
-                          {sIdx < arr.length - 1 && (
-                            <input
-                              className="code-input-blank"
-                              placeholder="digite aqui"
-                              value={fillValue}
-                              onChange={e => setFillValue(e.target.value)}
-                              onKeyDown={e => e.key === "Enter" && fillValue.trim() && handleConfirmAnswer()}
-                              autoFocus
-                            />
-                          )}
-                        </span>
-                      ))}
+                    <div style={{ ...styles.codeIDEBlock, padding: "20px 24px", display: "flex", flexDirection: "column", gap: 6, overflowX: "auto" }}>
+                      {(() => {
+                        let globalBlankIdx = 0;
+                        const lines = activeLevel.code.split("\n");
+                        return lines.map((line, lineIdx) => {
+                          const lineParts = line.split("___");
+                          return (
+                            <div key={lineIdx} style={{ display: "flex", alignItems: "center", flexWrap: "wrap", minHeight: 28, lineHeight: "28px" }}>
+                              {lineParts.map((part, pIdx) => {
+                                const isLastPart = pIdx === lineParts.length - 1;
+                                const currentBlankIdx = globalBlankIdx;
+                                if (!isLastPart) {
+                                  globalBlankIdx++;
+                                }
+                                return (
+                                  <React.Fragment key={pIdx}>
+                                    <span style={{ fontFamily: "monospace", fontSize: 17, color: "#d4d4d4", whiteSpace: "pre" }}>{part}</span>
+                                    {!isLastPart && (
+                                      <input
+                                        className="code-input-blank"
+                                        placeholder="digite aqui"
+                                        value={Array.isArray(activeLevel.answer) ? (fillValues[currentBlankIdx] || "") : fillValue}
+                                        onChange={e => {
+                                          const val = e.target.value;
+                                          if (Array.isArray(activeLevel.answer)) {
+                                            const nextVals = [...fillValues];
+                                            nextVals[currentBlankIdx] = val;
+                                            setFillValues(nextVals);
+                                          } else {
+                                            setFillValue(val);
+                                            const nextVals = [...fillValues];
+                                            nextVals[0] = val;
+                                            setFillValues(nextVals);
+                                          }
+                                        }}
+                                        onKeyDown={e => {
+                                          if (e.key === "Enter") {
+                                            const isAllFilled = Array.isArray(activeLevel.answer)
+                                              ? activeLevel.answer.every((_, idx) => (fillValues[idx] || "").trim())
+                                              : fillValue.trim();
+                                            if (isAllFilled) {
+                                              handleConfirmAnswer();
+                                            }
+                                          }
+                                        }}
+                                        style={{
+                                          minWidth: "100px",
+                                          fontSize: "16px",
+                                          padding: "2px 6px",
+                                          margin: "0 4px",
+                                          height: "24px"
+                                        }}
+                                        autoFocus={currentBlankIdx === 0}
+                                      />
+                                    )}
+                                  </React.Fragment>
+                                );
+                              })}
+                            </div>
+                          );
+                        });
+                      })()}
                     </div>
                   </div>
                   
@@ -665,12 +737,12 @@ export default function LevelView({
               ) : (
                 <button
                   onClick={handleConfirmAnswer}
-                  disabled={activeLevel.type === "quiz" ? selectedQuizOption === null : !fillValue.trim()}
+                  disabled={activeLevel.type === "quiz" ? selectedQuizOption === null : isFillDisabled()}
                   style={{
                     ...styles.primaryBtn,
                     background: activeTheme.pythonGreen,
-                    opacity: (activeLevel.type === "quiz" ? selectedQuizOption !== null : fillValue.trim()) ? 1 : 0.5,
-                    cursor: (activeLevel.type === "quiz" ? selectedQuizOption !== null : fillValue.trim()) ? "pointer" : "not-allowed"
+                    opacity: (activeLevel.type === "quiz" ? selectedQuizOption !== null : !isFillDisabled()) ? 1 : 0.5,
+                    cursor: (activeLevel.type === "quiz" ? selectedQuizOption !== null : !isFillDisabled()) ? "pointer" : "not-allowed"
                   }}
                 >
                   Confirmar Resposta
