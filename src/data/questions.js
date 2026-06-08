@@ -9,10 +9,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 15,
     theory: "Variáveis são como **caixas organizadoras** na memória do computador. Cada caixa tem um **nome** (rótulo) e guarda um **valor** (conteúdo).\n\nPara guardar algo em uma variável, usamos o símbolo de igual `=` (chamado de operador de atribuição).\n\n**Exemplo:**\n```python\nidade = 15\n```\nNo exemplo acima, criamos uma caixa chamada `idade` e guardamos o número `15` dentro dela.",
+    question: "O Professor Cobra quer iniciar o seu treinamento guardando a linguagem secreta da masmorra em uma variável. Declare a variável `linguagem` com a string correspondente.",
     code: "linguagem = ___",
     answer: "Python",
-    placeholder: "Complete com \"Python\" (com aspas)",
-    hint: "Insira o nome da linguagem de programação que estamos estudando entre aspas duplas, por exemplo: \"Python\""
+    placeholder: "Nome da linguagem",
+    hint: "É o nome da linguagem de programação do Professor Cobra! Lembre-se de colocar textos (strings) entre aspas e iniciar com letra maiúscula."
   },
   {
     id: 2,
@@ -45,10 +46,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 15,
     theory: "Números com casas decimais (números quebrados) são chamados de **float** (ponto flutuante).\n\n**Importante:** No Python e na programação, usamos **ponto `.`** e não vírgula `,` para separar a parte decimal!\n\n**Exemplo:**\n```python\npreco = 4.99   # Correto!\naltura = 1,75  # Erro de sintaxe!\n```\nSempre utilize o ponto para números quebrados.",
+    question: "Para obter a média exata de um aprendiz de magia, precisamos de uma nota de corte quebrada de valor 8.5. Defina a variável `nota` com esse valor flutuante.",
     code: "nota = ___",
     answer: "8.5",
-    placeholder: "Complete com o decimal 8.5",
-    hint: "Declare a variável nota com o valor decimal oito e meio usando o ponto decimal."
+    placeholder: "Ex: 10.0",
+    hint: "Use a regra da programação americana (ponto '.' como separador decimal) para declarar o valor de oito e meio."
   },
   {
     id: 5,
@@ -92,10 +94,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 15,
     theory: "Na programação, tomamos decisões usando o comando **`if`** (que significa \"se\" em inglês).\n\nEle verifica uma condição. Se for verdadeira, executa o bloco de código logo abaixo.\n\n**Sintaxe importante:**\n1. Usamos dois pontos `:` no final da linha do `if`.\n2. O código de dentro do `if` deve ter um recuo de **4 espaços** (chamado de **indentação**). O Python usa esse espaço para saber o que está dentro do bloco.\n\n```python\nif idade >= 18:\n    print(\"Maior de idade\")\n```",
+    question: "Você encontrou o portão da guilda dos aventureiros. Para destrancá-lo, o jogador deve ter idade igual ou superior a 16 anos. Preencha a estrutura de teste condicional.",
     code: "___ idade >= 16:\n    print(\"Pode votar\")",
     answer: "if",
-    placeholder: "Complete com a condicional se",
-    hint: "Palavra-chave que inicia a estrutura de decisão condicional (\"se\" em inglês)."
+    placeholder: "Estrutura de decisão",
+    hint: "Insira a palavra-chave de desvio condicional básico em inglês (duas letras minúsculas) para iniciar o bloco de teste."
   },
   {
     id: 9,
@@ -115,11 +118,12 @@ export const QUESTIONS = [
     topic: "Condicionais",
     type: "fill",
     xp: 15,
-    theory: "O que fazemos quando a condição do `if` é falsa? Usamos o **`else`** (que significa \"caso contrário\").\n\nO bloco dentro do `else` roda **apenas** quando a condição do `if` falha (dá False).\n\n**Sintaxe:** O `else` **não** recebe uma condição de teste e termina com dois pontos `:`.\n\n```python\nif nota >= 6.0:\n    print(\"Aprovado\")\nelse:\n    print(\"Reprovado\")\n```",
+    theory: "O que fazemos quando a condição do `if` é falsa? Usamos o **`else`** (que significa \"caso contrário\").\n\nO bloco dentro do `else` roda **apenas** quando a condição do `if` falha (dá False).\n\n**Sintaxe:** O `else` **não** recebe uma indicaçao de teste e termina com dois pontos `:`.\n\n```python\nif nota >= 6.0:\n    print(\"Aprovado\")\nelse:\n    print(\"Reprovado\")\n```",
+    question: "Caso o estudante tire nota superior ou igual a 6, o sistema imprime 'Aprovado'. Do contrário, imprime 'Reprovado'. Adicione a cláusula para tratar o caso contrário.",
     code: "if nota >= 6:\n    print(\"Aprovado\")\n___:\n    print(\"Reprovado\")",
     answer: "else",
-    placeholder: "Complete com o senão",
-    hint: "A palavra-chave para \"caso contrário\" em inglês."
+    placeholder: "Caso contrário",
+    hint: "Palavra-chave associada ao 'if' que roda somente quando a condição inicial falha. Significa 'caso contrário' (quatro letras minúsculas em inglês)."
   },
   {
     id: 11,
@@ -189,10 +193,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 20,
     theory: "Listas são usadas para guardar múltiplos itens em uma única variável. No nosso RPG, podemos guardar todas as armas do guerreiro em uma lista! Criamos uma lista usando colchetes `[]` e separamos os itens por vírgula.\n\n**Exemplo:**\n`armas = [\"espada\", \"machado\"]`\n\nPodemos acessar itens pelo seu índice (começando do zero): `armas[0]` retornará `\"espada\"`.",
+    question: "Seu inventário de aventureiro deve começar obrigatoriamente com a arma básica comentada na teoria (espada). Complete a lista inserindo esse item.",
     code: "inventario = [___, \"escudo\", \"pocao\"]",
     answer: "\"espada\"",
-    placeholder: "Complete com \"espada\" (com aspas)",
-    hint: "Insira a palavra \"espada\" entre aspas duplas como primeiro item da lista."
+    placeholder: "\"Arma inicial\"",
+    hint: "Como se trata de uma coleção de textos (strings), seu item deve ser envelopado entre aspas. Use a primeira arma citada na teoria."
   },
   {
     id: 17,
@@ -213,10 +218,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 20,
     theory: "Estruturas de repetição executam um bloco de código repetidas vezes.\n\nO laço **`while`** (enquanto) repete o código **enquanto** uma condição for verdadeira. Em um combate, podemos atacar o inimigo enquanto a vida dele for maior que 0!\n\n**Exemplo:**\n```python\nhp_inimigo = 30\nwhile hp_inimigo > 0:\n    print(\"Golpe!\")\n    hp_inimigo = hp_inimigo - 10\n```",
+    question: "Você deve atacar o goblin no campo de batalha de forma repetida enquanto o HP dele for maior que 0. Insira o laço condicional correto.",
     code: "hp_goblin = 20\n___ hp_goblin > 0:\n    print(\"Atacar Goblin!\")\n    hp_goblin = hp_goblin - 10",
     answer: "while",
-    placeholder: "Complete com o enquanto em inglês",
-    hint: "Palavra-chave do laço que testa a condição a cada turno de batalha."
+    placeholder: "Laço condicional",
+    hint: "Laço de repetição que executa um bloco 'enquanto' a condição for verdadeira (palavra em inglês com 5 letras)."
   },
   {
     id: 19,
@@ -284,10 +290,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 20,
     theory: "Para inicializar as propriedades de um objeto quando ele é criado, usamos a função especial **`__init__`** (chamada de construtor).\n\nNo Python, todo método dentro de uma classe deve ter **`self`** como primeiro parâmetro. O `self` aponta para o próprio objeto sendo configurado.\n\n**Exemplo:**\n```python\nclass Armadura:\n    def __init__(self, defesa):\n        self.defesa = defesa\n```",
+    question: "O Escudo precisa de um método especial que inicialize sua resistência no momento de criação do objeto. Complete a declaração da função construtora.",
     code: "class Escudo:\n    ___ __init__(self, resistencia):\n        self.resistencia = resistencia",
     answer: "def",
-    placeholder: "Complete com a palavra-chave de função",
-    hint: "Usamos 'def' para declarar o método construtor __init__ dentro da classe."
+    placeholder: "Declarar método",
+    hint: "Em Python, declaramos funções e métodos de instância utilizando a mesma palavra-chave de três letras (abreviação de 'define')."
   },
   {
     id: 25,
@@ -319,10 +326,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 20,
     theory: "Erros no meio do jogo podem travar tudo! Para capturar erros sem quebrar a execução, usamos os blocos **`try`** e **`except`**.\n\nO Python tenta rodar o código dentro do bloco `try`. Se ocorrer algum erro (exceção), ele para imediatamente e vai para o bloco `except`.\n\n**Exemplo:**\n```python\ntry:\n    divisao = 10 / 0\nexcept:\n    print(\"Divisão por zero capturada!\")\n```",
+    question: "A divisão por zero causará uma falha crítica fatal na batalha contra o monstro! Envolva a operação aritmética perigosa no bloco de tentativa correto para evitar o erro.",
     code: "___:\n    dano = 100 / 0\nexcept:\n    print(\"Erro ao calcular dano\")",
     answer: "try",
-    placeholder: "Complete com a palavra-chave de tentativa",
-    hint: "Palavra-chave inglesa que significa 'tentar'."
+    placeholder: "Palavra-chave",
+    hint: "Inicia o bloco monitorado onde erros inesperados podem ser interceptados (significa 'tentar' em inglês, com três letras)."
   },
   {
     id: 28,
@@ -343,10 +351,11 @@ export const QUESTIONS = [
     type: "fill",
     xp: 20,
     theory: "Para ler o conteúdo de um arquivo, usamos a função `open(nome_arquivo, modo)` com o modo `'r'` (read - leitura) e o método `.read()` para obter todo o texto do arquivo.\n\n**Exemplo:**\n```python\narq = open(\"pergaminho.txt\", \"r\")\nconteudo = arq.read()\narq.close()\n```",
+    question: "Para ler os pergaminhos da masmorra antiga sem modificar as escrituras, abra o arquivo no modo correto que permite apenas a leitura dos dados.",
     code: "arquivo = open(\"runas.txt\", ___)\nrunas = arquivo.read()\narquivo.close()",
     answer: "\"r\"",
-    placeholder: "Complete com o modo de leitura de arquivo (com aspas)",
-    hint: "Use a letra r entre aspas para indicar leitura: \"r\""
+    placeholder: "\"Modo\"",
+    hint: "Insira uma string de um caractere contendo a letra indicativa de leitura ('read' em inglês)."
   },
   {
     id: 30,
@@ -425,10 +434,10 @@ export const SUB_QUESTIONS = {
   "1-B": {
     id: "1-B", parentId: 1, type: "fill", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 1-B: O Portal do Conhecimento",
-    question: "Para destrancar o portal da caverna do Professor Cobra, você deve programar o painel digitando o nome da linguagem secreta, que é 'Python':",
+    question: "O portal da caverna do Professor Cobra exige o nome da linguagem que você está estudando para se abrir. Atribua o nome da linguagem à variável de segredo.",
     code: "segredo = \"___\"",
     answer: "Python",
-    hint: "Digite apenas a palavra: Python."
+    hint: "A resposta é a palavra-chave que dá nome a este curso (iniciada com P maiúsculo)."
   },
 
   // NÍVEL 2
@@ -443,10 +452,10 @@ export const SUB_QUESTIONS = {
   "2-B": {
     id: "2-B", parentId: 2, type: "fill", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 2-B: O Inventário de Poções",
-    question: "No seu inventário, você precisa criar uma variável utilizando o padrão snake_case para guardar a quantidade de poções vermelhas (10 poções):",
+    question: "Crie uma variável usando o padrão snake_case para armazenar a quantidade de poções vermelhas do seu inventário (sem acentuação ou espaços).",
     code: "___ = 10",
-    answer: "potoes_vermelhas",
-    hint: "Escreva poções vermelhas em inglês/português sem caracteres especiais ou espaços, use o underline: potoes_vermelhas."
+    answer: "pocoes_vermelhas",
+    hint: "Escreva 'poções vermelhas' em português sem usar acentos, cedilha ou espaços, ligando as palavras por sublinhado (_)."
   },
 
   // NÍVEL 3
@@ -461,10 +470,10 @@ export const SUB_QUESTIONS = {
   "3-B": {
     id: "3-B", parentId: 3, type: "fill", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 3-B: A Temperatura do Subsolo",
-    question: "Você desceu para a masmorra de gelo e o termômetro marcou 15 graus abaixo de zero. Defina a variável 'temperatura_masmorra' com esse valor inteiro:",
+    question: "A temperatura na masmorra de gelo é de 15 graus Celsius abaixo de zero. Complete a lacuna definindo a variável correspondente com esse número inteiro.",
     code: "temperatura_masmorra = ___",
     answer: "-15",
-    hint: "Digite o número negativo menos quinze sem espaços ou aspas: -15."
+    hint: "Em matemática, valores abaixo de zero são representados por um sinal de menos '-' à esquerda do número."
   },
 
   // NÍVEL 4
@@ -479,10 +488,10 @@ export const SUB_QUESTIONS = {
   "4-B": {
     id: "4-B", parentId: 4, type: "fill", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 4-B: O Salto do Abismo",
-    question: "Para saltar um abismo com segurança, sua velocidade em metros por segundo precisa ser exatamente 8.5. Complete a variável de velocidade com esse valor decimal:",
+    question: "Seu personagem deve atingir a velocidade de oito e meio metros por segundo para cruzar o abismo saltando. Complete com o valor decimal correspondente.",
     code: "velocidade_salto = ___",
     answer: "8.5",
-    hint: "Lembre-se de usar ponto '.' e não vírgula para declarar oito e meio."
+    hint: "Números float na programação utilizam o ponto decimal (.) em vez da vírgula (,)."
   },
 
   // NÍVEL 5
@@ -497,10 +506,10 @@ export const SUB_QUESTIONS = {
   "5-B": {
     id: "5-B", parentId: 5, type: "fill", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 5-B: O Nome do Clã",
-    question: "Você foi convidado para o clã lendário dos programadores. Defina a variável 'nome_cla' com o texto 'Cobra Real' utilizando as aspas corretas:",
+    question: "Atribua a string Cobra Real à variável `nome_cla` para registrar sua afiliação ao clã lendário.",
     code: "nome_cla = ___",
     answer: "\"Cobra Real\"",
-    hint: "Escreva o texto \"Cobra Real\" entre aspas duplas."
+    hint: "Textos literais em Python necessitam de delimitadores de string (aspas) para que não sejam interpretados como comandos ou variáveis."
   },
 
   // NÍVEL 6
@@ -515,17 +524,17 @@ export const SUB_QUESTIONS = {
   "6-B": {
     id: "6-B", parentId: 6, type: "fill", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 6-B: Status do Guerreiro",
-    question: "O guerreiro sofreu um ataque crítico de um monstro, mas conseguiu sobreviver com 1 HP! Defina o estado da variável 'fim_de_jogo' (game over) como falso, indicando que a aventura continua:",
+    question: "O herói sobreviveu por pouco a um ataque crítico! Configure a variável 'fim_de_jogo' com o booleano adequado para indicar que a partida não acabou.",
     code: "fim_de_jogo = ___",
     answer: "False",
-    hint: "Escreva False com a primeira letra maiúscula (e sem aspas, pois é booleano)."
+    hint: "Insira o valor lógico de falso em Python (iniciando com letra maiúscula e sem aspas)."
   },
 
   // NÍVEL 7
   "7-A": {
     id: "7-A", parentId: 7, type: "quiz", topic: "Variáveis & Tipos", xp: 5,
     title: "Sub-fase 7-A: A Saída do Print",
-    question: "Se executarmos `print(\"Olá\")`, o que aparece no terminal de saída?",
+    question: "Se executarmos `print(\"Olá\")`, o que aparece no terminal de acesso?",
     options: ["Olá (sem aspas)", "\"Olá\" (com aspas)", "print(\"Olá\")", "Nada, dá erro"],
     answer: 0,
     explanation: "A função print() remove as aspas delimitadoras do texto ao exibi-lo na tela."
@@ -536,7 +545,7 @@ export const SUB_QUESTIONS = {
     question: "O chefe da masmorra apareceu! Mostre na tela a mensagem guardada na variável 'grito_guerra' para assustá-lo e iniciar o combate:",
     code: "___(grito_guerra)",
     answer: "print",
-    hint: "Use a função de exibição padrão do Python para enviar variáveis à tela."
+    hint: "Chame a função integrada do Python que imprime informações na saída padrão do terminal."
   },
 
   // NÍVEL 8
@@ -554,7 +563,7 @@ export const SUB_QUESTIONS = {
     question: "Uma porta de ouro maciço na masmorra exige que você tenha exatamente 3 chaves para abrir. Complete a condicional para verificar essa igualdade:",
     code: "___ chaves == 3:",
     answer: "if",
-    hint: "Escreva a condicional 'se' em inglês."
+    hint: "Escreva a palavra-chave de desvio condicional básica ('se' em inglês)."
   },
 
   // NÍVEL 9
@@ -569,10 +578,10 @@ export const SUB_QUESTIONS = {
   "9-B": {
     id: "9-B", parentId: 9, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 9-B: A Ponte Estreita",
-    question: "Você só pode cruzar a ponte estreita sobre a lava se a sua quantidade de vidas for diferente de zero. Complete a comparação de diferença:",
+    question: "Cruzar a ponte sobre a lava exige que a sua quantidade de vidas seja diferente de zero. Complete a comparação lógica de desigualdade.",
     code: "if vidas ___ 0:",
     answer: "!=",
-    hint: "Use o operador 'diferente de' correspondente no Python (sinal de exclamação e igual)."
+    hint: "O operador lógico combina o símbolo de exclamação com o símbolo de igualdade."
   },
 
   // NÍVEL 10
@@ -587,10 +596,10 @@ export const SUB_QUESTIONS = {
   "10-B": {
     id: "10-B", parentId: 10, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 10-B: O Baú de Tesouro",
-    question: "Se o baú de tesouro estiver trancado, nós chamamos a função 'tentar_abrir()'. Caso contrário (else), exibimos a mensagem 'Tesouro coletado!'. Preencha a lacuna do senão:",
+    question: "Se o baú estiver trancado, chame 'tentar_abrir()'. Caso contrário, imprima 'Tesouro coletado!'. Preencha a lacuna com a ramificação padrão.",
     code: "if trancado:\n    tentar_abrir()\n___:\n    print(\"Tesouro coletado!\")",
     answer: "else",
-    hint: "Palavra-chave para o caso contrário em inglês."
+    hint: "É o bloco que trata todos os casos alternativos onde a condição 'if' falhou (palavra de 4 letras em inglês)."
   },
 
   // NÍVEL 11
@@ -605,10 +614,10 @@ export const SUB_QUESTIONS = {
   "11-B": {
     id: "11-B", parentId: 11, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 11-B: O Elevador de Níveis",
-    question: "Se o seu XP for menor que 100, você é 'Bronze'. Senão, se (elif) o XP for menor que 200, você é 'Prata'. Complete a condicional alternativa para validar o nível prata:",
+    question: "Se seu XP for menor que 100, exiba 'Bronze'. Caso contrário, se o XP for menor que 200, exiba 'Prata'. Complete a lacuna condicional intermediária.",
     code: "if xp < 100:\n    print(\"Bronze\")\n___ xp < 200:\n    print(\"Prata\")",
     answer: "elif",
-    hint: "Utilize a abreviação do Python para 'else if'."
+    hint: "A palavra-chave é a contração de 'else if' que permite encadear múltiplos testes condicionais em sequência."
   },
 
   // NÍVEL 12
@@ -623,10 +632,10 @@ export const SUB_QUESTIONS = {
   "12-B": {
     id: "12-B", parentId: 12, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 12-B: O Dragão Adormecido",
-    question: "Você se deparou com um dragão adormecido! Você só conseguirá passar sorrateiramente se o seu nível de barulho for menor que 10. Complete a condição relacional:",
+    question: "O dragão acordará se seu barulho atingir 10 ou mais. Insira o operador correto para verificar se o barulho é menor que 10.",
     code: "if barulho ___ 10:\n    passar_sorrateiro()",
     answer: "<",
-    hint: "Use o símbolo matemático de menor que."
+    hint: "Use o símbolo de comparação matemática apontando para a esquerda (menor)."
   },
 
   // NÍVEL 13
@@ -641,10 +650,10 @@ export const SUB_QUESTIONS = {
   "13-B": {
     id: "13-B", parentId: 13, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 13-B: A Sala do Trono",
-    question: "Para adentrar na sala do trono, você precisa pertencer ao clã dos guerreiros E (and) possuir a medalha de honra. Use o operador lógico adequado:",
+    question: "Adentrar na sala do trono requer duas condições simultâneas: pertencer ao clã de guerreiros e possuir a medalha. Insira o operador lógico de conjunção correspondente.",
     code: "if eh_guerreiro ___ tem_medalha:\n    entrar_sala()",
     answer: "and",
-    hint: "Escreva o operador 'e' em inglês."
+    hint: "O operador de conjunção exige que ambos os lados sejam verdadeiros (palavra em inglês de três letras)."
   },
 
   // NÍVEL 14
@@ -659,10 +668,10 @@ export const SUB_QUESTIONS = {
   "14-B": {
     id: "14-B", parentId: 14, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 14-B: Fuga da Caverna",
-    question: "A caverna está desmoronando! Para escapar a tempo, você pode usar uma poção de teletransporte OU (or) correr pela saída de emergência. Complete com o operador lógico:",
+    question: "Para fugir do desmoronamento, você precisa de pelo menos uma das opções: poção de teletransporte ou saída física. Preencha com o operador de disjunção.",
     code: "if tem_pocao ___ tem_saida:\n    escapar_seguro()",
     answer: "or",
-    hint: "Escreva o operador 'ou' em inglês."
+    hint: "O operador lógico de duas letras em inglês que retorna verdadeiro se pelo menos um dos lados for verdadeiro."
   },
 
   // NÍVEL 15
@@ -677,10 +686,10 @@ export const SUB_QUESTIONS = {
   "15-B": {
     id: "15-B", parentId: 15, type: "fill", topic: "Condicionais", xp: 5,
     title: "Sub-fase 15-B: Monitor de Energia",
-    question: "No painel da espaçonave, se a bateria for menor que 20% mostramos 'Crítico'. Senão, se (elif) for menor que 50%, exibimos 'Alerta'. Preencha a lacuna condicional:",
+    question: "Se a bateria estiver abaixo de 20%, o status é 'Crítico'. Caso contrário, se a bateria estiver abaixo de 50%, o status é 'Alerta'. Complete o fluxo lógico com o desvio adequado.",
     code: "if bateria < 20:\n    print(\"Crítico\")\n___ bateria < 50:\n    print(\"Alerta\")",
     answer: "elif",
-    hint: "Use a palavra-chave condicional secundária."
+    hint: "Esta palavra-chave testa uma nova condição intermediária caso o 'if' principal seja falso."
   },
 
   // NÍVEL 16
@@ -695,10 +704,10 @@ export const SUB_QUESTIONS = {
   "16-B": {
     id: "16-B", parentId: 16, type: "fill", topic: "Coleções", xp: 5,
     title: "Sub-fase 16-B: O Inventário Organizado",
-    question: "Sua mochila de itens é descrita por `inventario = [\"espada\", \"escudo\", \"pocao\"]`. Complete a lacuna para resgatar o primeiro elemento (índice zero) e equipar sua espada:",
+    question: "Sua lista de itens é `inventario = [\"espada\", \"escudo\", \"pocao\"]`. Complete a expressão para acessar e equipar o primeiro item do inventário.",
     code: "equipar = inventario[___]",
     answer: "0",
-    hint: "Digite apenas o índice numérico correspondente ao primeiro elemento da lista."
+    hint: "Em Python e na maioria das linguagens de programação, os índices de posições de listas iniciam com qual número inteiro?"
   },
 
   // NÍVEL 17
@@ -713,10 +722,10 @@ export const SUB_QUESTIONS = {
   "17-B": {
     id: "17-B", parentId: 17, type: "fill", topic: "Coleções", xp: 5,
     title: "Sub-fase 17-B: O Comprimento da Mochila",
-    question: "Complete a lacuna com o nome da função global necessária para contar quantos elementos existem na lista 'mochila':",
+    question: "Determine a quantidade total de itens guardados em sua lista. Preencha com a função de contagem de elementos.",
     code: "total = ___(mochila)",
     answer: "len",
-    hint: "Palavra-chave curta (3 letras) para medir o tamanho/comprimento de coleções (length)."
+    hint: "É uma função interna do Python cuja abreviação vem da palavra em inglês 'length' (tamanho/comprimento)."
   },
 
   // NÍVEL 18
@@ -731,10 +740,10 @@ export const SUB_QUESTIONS = {
   "18-B": {
     id: "18-B", parentId: 18, type: "fill", topic: "Repetições", xp: 5,
     title: "Sub-fase 18-B: Causando Dano",
-    question: "Complete a lacuna para subtrair/diminuir o HP do goblin em 10 pontos a cada golpe do guerreiro:",
+    question: "A cada ataque desferido contra o goblin, reduza o HP dele em 10. Complete a operação aritmética.",
     code: "hp_goblin = hp_goblin ___ 10",
     answer: "-",
-    hint: "Use o símbolo aritmético de subtração."
+    hint: "Use o caractere correspondente à operação de diferença/subtração matemática."
   },
 
   // NÍVEL 19
@@ -749,10 +758,10 @@ export const SUB_QUESTIONS = {
   "19-B": {
     id: "19-B", parentId: 19, type: "fill", topic: "Repetições", xp: 5,
     title: "Sub-fase 19-B: Varrendo a Mochila",
-    question: "Preencha a lacuna para estruturar o laço 'for' e exibir cada elemento contido na lista 'mochila':",
+    question: "Você precisa inspecionar e exibir todos os itens contidos em sua lista de inventário. Insira a instrução do laço de iteração correspondente.",
     code: "___ item in mochila:\n    print(item)",
     answer: "for",
-    hint: "Use a palavra-chave de laço iterador padrão do Python."
+    hint: "A palavra-chave de laço que percorre sequencialmente elementos de coleções (em inglês, com 3 letras)."
   },
 
   // NÍVEL 20
@@ -767,10 +776,10 @@ export const SUB_QUESTIONS = {
   "20-B": {
     id: "20-B", parentId: 20, type: "fill", topic: "Coleções", xp: 5,
     title: "Sub-fase 20-B: Modificando Valores",
-    question: "Preencha a lacuna para redefinir o HP do dragão no dicionário para cem pontos:",
+    question: "Atualize os pontos de vida do dragão configurando o novo valor no dicionário de atributos.",
     code: "dragao[___] = 100",
     answer: "\"hp\"",
-    hint: "Passe o nome da chave entre aspas duplas, por exemplo: \"hp\"."
+    hint: "Acesse a chave de string que representa a abreviação dos pontos de vida do monstro (envolva em aspas duplas)."
   },
 
   // NÍVEL 21
@@ -785,10 +794,10 @@ export const SUB_QUESTIONS = {
   "21-B": {
     id: "21-B", parentId: 21, type: "fill", topic: "Modularização", xp: 5,
     title: "Sub-fase 21-B: O Feitiço de Cura",
-    question: "Crie a definição de uma função chamada 'conjurar_cura' para que seu mago possa recuperar vida. Preencha com a palavra-chave de criação:",
+    question: "Defina a nova função chamada 'conjurar_cura' no código do mago.",
     code: "___ conjurar_cura():\n    print(\"Curado!\")",
     answer: "def",
-    hint: "Palavra-chave utilizada para definir funções em Python."
+    hint: "A palavra-chave de definição de blocos executáveis reutilizáveis (três letras minúsculas)."
   },
 
   // NÍVEL 22
@@ -803,10 +812,10 @@ export const SUB_QUESTIONS = {
   "22-B": {
     id: "22-B", parentId: 22, type: "fill", topic: "Modularização", xp: 5,
     title: "Sub-fase 22-B: Ativando a Magia",
-    question: "Seu guerreiro precisa lançar fogo em combate. Chame a função de fogo 'lancar_fogo' passando a quantidade de 10 de mana como argumento:",
+    question: "Invoque a função que lança fogo no monstro, enviando o valor inteiro 10 como quantidade de mana a ser consumida.",
     code: "___(10)",
     answer: "lancar_fogo",
-    hint: "Escreva exatamente o nome da função que realiza o ataque de chamas."
+    hint: "Escreva o identificador exato da função declarada no problema."
   },
 
   // NÍVEL 23
@@ -821,10 +830,10 @@ export const SUB_QUESTIONS = {
   "23-B": {
     id: "23-B", parentId: 23, type: "fill", topic: "Orientação a Objetos", xp: 5,
     title: "Sub-fase 23-B: Instanciação Simples",
-    question: "Instancie um objeto da classe 'Heroi' sem passar parâmetros adicionais e guarde na variável 'guerreiro':",
+    question: "Use o molde de dados do herói para criar uma nova instância na variável `guerreiro`.",
     code: "guerreiro = ___()",
     answer: "Heroi",
-    hint: "Escreva o nome da classe para chamá-la como uma função: Heroi."
+    hint: "Chame o construtor da classe correspondente (lembre-se que nomes de classes usam iniciais maiúsculas por convenção)."
   },
 
   // NÍVEL 24
@@ -839,10 +848,10 @@ export const SUB_QUESTIONS = {
   "24-B": {
     id: "24-B", parentId: 24, type: "fill", topic: "Orientação a Objetos", xp: 5,
     title: "Sub-fase 24-B: Atributos no self",
-    question: "Complete a inicialização do atributo 'hp' do mago usando o self para salvá-lo na instância:",
+    question: "Dentro do construtor da classe Mago, vincule o parâmetro 'hp' recebido diretamente à instância do próprio objeto.",
     code: "class Mago:\n    def __init__(self, hp):\n        ___ = hp",
     answer: "self.hp",
-    hint: "Acesse a propriedade do objeto usando a palavra-chave de referência self seguida de ponto e nome da propriedade: self.hp."
+    hint: "Use a referência de auto-associação 'self' ligada à propriedade por ponto para salvar a variável na instância."
   },
 
   // NÍVEL 25
@@ -857,10 +866,10 @@ export const SUB_QUESTIONS = {
   "25-B": {
     id: "25-B", parentId: 25, type: "fill", topic: "Orientação a Objetos", xp: 5,
     title: "Sub-fase 25-B: Acessando Dados no Método",
-    question: "No método de rugido do Dragão, exiba o rugido concatenando o nome do dragão. Complete o código:",
+    question: "No método `rugir()`, exiba o nome específico do dragão de dentro do objeto para personalizar a mensagem.",
     code: "class Dragao:\n    def __init__(self, nome):\n        self.nome = nome\n    def rugir(self):\n        print(___ + \" grita: ROAR!\")",
     answer: "self.nome",
-    hint: "Recupere o atributo de instância 'nome' do próprio dragão usando self."
+    hint: "Para resgatar dados do próprio objeto de dentro de um método, use o prefixo de instância seguido do nome do atributo."
   },
 
   // NÍVEL 26
@@ -875,10 +884,10 @@ export const SUB_QUESTIONS = {
   "26-B": {
     id: "26-B", parentId: 26, type: "fill", topic: "Orientação a Objetos", xp: 5,
     title: "Sub-fase 26-B: Criando o Segundo Herói",
-    question: "Crie uma nova instância de Heroi chamada 'Arthur' com 80 de HP, guardando-a na variável 'h2':",
+    question: "Crie um segundo herói instanciando a classe `Heroi` com os valores 'Arthur' e 80, salvando o resultado em `h2`.",
     code: "h2 = ___(\"Arthur\", 80)",
     answer: "Heroi",
-    hint: "Invoque a classe Heroi passando os parâmetros necessários."
+    hint: "Passe os argumentos correspondentes na chamada de inicialização do molde Heroi."
   },
 
   // NÍVEL 27
@@ -893,10 +902,10 @@ export const SUB_QUESTIONS = {
   "27-B": {
     id: "27-B", parentId: 27, type: "fill", topic: "Tratamento de Erros", xp: 5,
     title: "Sub-fase 27-B: O Escudo de Mana",
-    question: "Proteja a conjuração do feitiço para evitar falhas fatais no jogo. Complete a estrutura:",
+    question: "Se o feitiço falhar devido a erro de mana, trate a exceção para que o jogo não trave. Preencha com o bloco de interceptação.",
     code: "try:\n    conjurar_magia()\n___:\n    print(\"Mana insuficiente!\")",
     answer: "except",
-    hint: "Utilize a palavra-chave de captura de erros associada ao try."
+    hint: "A palavra-chave do bloco complementar que é executada caso ocorra algum erro no bloco de tentativa."
   },
 
   // NÍVEL 28
@@ -911,10 +920,10 @@ export const SUB_QUESTIONS = {
   "28-B": {
     id: "28-B", parentId: 28, type: "fill", topic: "Manipulação de Arquivos", xp: 5,
     title: "Sub-fase 28-B: Fechando Conexões",
-    question: "Feche a conexão do arquivo aberto na variável 'p' após terminar de gravar os atributos do dragão:",
+    question: "Sempre que terminar de escrever em um arquivo, encerre a conexão para salvar as mudanças em disco.",
     code: "p = open(\"pergaminho.txt\", \"w\")\np.write(\"Dano: 900\")\np.___()",
     answer: "close",
-    hint: "Use o método que libera o arquivo e fecha a gravação."
+    hint: "Utilize o método de encerramento do arquivo ('fechar' em inglês)."
   },
 
   // NÍVEL 29
@@ -929,10 +938,10 @@ export const SUB_QUESTIONS = {
   "29-B": {
     id: "29-B", parentId: 29, type: "fill", topic: "Manipulação de Arquivos", xp: 5,
     title: "Sub-fase 29-B: Carregando Diários",
-    question: "Carregue todo o texto gravado no arquivo 'diario.txt' aberto na variável 'd':",
+    question: "Você precisa extrair as memórias escritas no diário. Chame o método apropriado para ler o conteúdo textual completo do arquivo.",
     code: "d = open(\"diario.txt\", \"r\")\nconteudo = d.___()\nd.close()",
     answer: "read",
-    hint: "Escreva o nome do método de leitura total do arquivo."
+    hint: "A ação de leitura de dados ('ler' em inglês)."
   },
 
   // NÍVEL 30
@@ -947,10 +956,10 @@ export const SUB_QUESTIONS = {
   "30-B": {
     id: "30-B", parentId: 30, type: "fill", topic: "Arquivos & OOP", xp: 5,
     title: "Sub-fase 30-B: Gerenciamento com with",
-    question: "Use o bloco with para abrir o arquivo de runas no modo leitura e guardá-lo como 'f':",
+    question: "Abra com segurança o arquivo de runas garantindo que ele será fechado ao fim da execução. Insira o gerenciador de contexto apropriado.",
     code: "___ open(\"runas.txt\", \"r\") as f:\n    runas = f.read()",
     answer: "with",
-    hint: "Insira a palavra-chave de criação do bloco de gerenciamento de contexto."
+    hint: "É o bloco especial em Python iniciado com a palavra-chave de quatro letras minúsculas (significa 'com')."
   }
 };
 

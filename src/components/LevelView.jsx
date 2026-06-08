@@ -497,9 +497,20 @@ export default function LevelView({
               {/* 2. LAYOUT FILL IN THE BLANK */}
               {activeLevel.type === "fill" && (
                 <div>
-                  <h4 style={{ fontSize: 16, fontWeight: 800, marginBottom: 18 }}>
-                    Preencha o espaço em branco `___` para fazer o código funcionar:
-                  </h4>
+                  {activeLevel.question ? (
+                    <>
+                      <h4 style={{ fontSize: 15, fontWeight: 800, marginBottom: 8, lineHeight: 1.5, color: activeTheme.text }}>
+                        {activeLevel.question}
+                      </h4>
+                      <p style={{ fontSize: 13, color: activeTheme.textMuted, marginBottom: 18 }}>
+                        Preencha o espaço em branco `___` para fazer o código funcionar:
+                      </p>
+                    </>
+                  ) : (
+                    <h4 style={{ fontSize: 16, fontWeight: 800, marginBottom: 18, color: activeTheme.text }}>
+                      Preencha o espaço em branco `___` para fazer o código funcionar:
+                    </h4>
+                  )}
 
                   <div style={styles.codeIDEContainer}>
                     <div style={styles.codeIDETab}>desafio.py</div>
